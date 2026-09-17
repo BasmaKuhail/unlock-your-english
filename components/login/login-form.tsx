@@ -1,10 +1,7 @@
-import { FormEvent, useState } from "react";
+"use client";
 
-import { loginContent } from "@/content/auth";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-
-import { auth, db } from "@/lib/firebase/client";
+import { useLoginForm } from "@/hooks/use-login-form";
+import { loginContent } from "@/lib/auth/login-content";
 
 type FieldProps = {
   id: string;
@@ -15,9 +12,6 @@ type FieldProps = {
   onChange: (value: string) => void;
 };
 
-function studentIdToEmail(studentId: string) {
-  return `${studentId.trim().toLowerCase()}@students.uye.local`;
-}
 function Field({ id, label, type = "text", autoComplete, value, onChange }: FieldProps) {
   return (
     <div>
@@ -38,37 +32,8 @@ function Field({ id, label, type = "text", autoComplete, value, onChange }: Fiel
   );
 }
 
-export function AuthForm() {
-  const [notice, setNotice] = useState<string | null>(null);
-
-  const [formData, setFormData] = useState({
-    id: "",
-    password: "",
-  })
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!formData.id.trim() || !formData.password) {
-      setNotice("Please fill in all fields.");
-      return;
-    }
-    setNotice(null);
-
-    try {
-      const email = studentIdToEmail(formData.id);
-
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        formData.password,
-      );
-
-      console.log("Logged in:", userCredential.user.uid);
-    } catch (error) {
-      console.error(error);
-      setNotice("Invalid learner ID or password.");
-    }
-  };
+export function LoginForm() {
+  const { formData, isSubmitting, notice, submit, updateField } = useLoginForm();
 
   return (
     <>
@@ -85,13 +50,8 @@ export function AuthForm() {
           id="learner-id" 
           label="Learner ID" 
           value={formData.id} 
-          onChange={
-            (id) =>
-            setFormData((current) => ({
-              ...current,
-              id,
-            }))
-          }/>
+          onChange={(id) => updateField("id", id)}
+        />
         <div>
           <div className="flex items-center justify-between gap-4">
             <label className="block text-sm font-semibold text-ink" htmlFor="password">
@@ -107,17 +67,13 @@ export function AuthForm() {
             required
             type="password"
             value={formData.password}
-            onChange={(e) =>
-              setFormData((current) => ({
-                ...current,
-                password: e.target.value,
-              }))
-            }
+            onChange={(e) => updateField("password", e.target.value)}
           />
         </div>
 
         <button
           className="w-full rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(61,114,251,0.25)] transition hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-[0_14px_28px_rgba(61,114,251,0.3)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+          disabled={isSubmitting}
           type="submit"
         >
           {loginContent.submitLabel}
