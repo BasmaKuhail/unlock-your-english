@@ -2,14 +2,14 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/ui/logo";
-import { loginContent } from "@/content/auth";
+import { loginContent } from "@/lib/auth/login-content";
 import rabbitReading from "@/public/jump.png";
 
 type AuthShellProps = {
   children: ReactNode;
 };
 
-export function AuthShell({ children }: AuthShellProps) {
+export function LoginShell({ children }: AuthShellProps) {
   const { visual } = loginContent;
 
   return (
