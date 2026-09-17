@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { Logo } from "@/components/ui/logo";
 import { loginContent } from "@/lib/auth/login-content";
-import rabbitReading from "@/public/jump.png";
+import rabbitReading from "@/public/login.png";
 
 type AuthShellProps = {
   children: ReactNode;
@@ -33,7 +33,7 @@ export function LoginShell({ children }: AuthShellProps) {
             <div className="absolute inset-x-0 bottom-0 h-full rounded-[1.5rem] " />
             <Image
               alt="The Uye rabbit reading a book"
-              className="relative z-10 w-[23rem] max-w-none -rotate-6 object-contain"
+              className="relative z-10 w-[23rem] max-w-none object-contain"
               priority
               src={rabbitReading}
             />
