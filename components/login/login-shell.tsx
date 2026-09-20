@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { Logo } from "@/components/ui/logo";
 import { loginContent } from "@/lib/auth/login-content";
-import rabbitReading from "@/public/jump.png";
+import rabbitReading from "@/public/login.png";
 
 type AuthShellProps = {
   children: ReactNode;
@@ -15,7 +15,7 @@ export function LoginShell({ children }: AuthShellProps) {
   return (
     <div className="flex min-h-dvh flex-col bg-canvas px-4 py-4 sm:px-6 sm:py-6">
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between">
-        <Logo label="uye." />
+        <Logo label="UYE" />
       </header>
 
       <main className="mx-auto my-auto grid w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-line bg-white shadow-[0_20px_55px_rgba(1,14,54,0.09)] lg:min-h-[32rem] lg:grid-cols-[0.82fr_1.18fr]">
@@ -33,7 +33,7 @@ export function LoginShell({ children }: AuthShellProps) {
             <div className="absolute inset-x-0 bottom-0 h-full rounded-[1.5rem] " />
             <Image
               alt="The Uye rabbit reading a book"
-              className="relative z-10 w-[23rem] max-w-none -rotate-6 object-contain"
+              className="relative z-10 w-[20rem] max-w-none object-contain"
               priority
               src={rabbitReading}
             />
