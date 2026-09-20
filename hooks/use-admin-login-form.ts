@@ -47,14 +47,29 @@ export function useAdminLoginForm() {
 
       if (tokenResult.claims.admin !== true) {
         await signOut(auth);
-
         setNotice("This account does not have administrator access.");
         return;
-    }
-    router.replace("/admin");
-    }catch{
+      }
+      const idToken = await userCredential.user.getIdToken();
+
+      const response = await fetch("/api/auth/admin-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idToken }),
+      });
+
+      if (!response.ok) {
+        await signOut(auth);
+
+        setNotice("Unable to create your admin session.");
+        return;
+      }
+      router.replace("/admin");
+    } catch {
       setNotice("We couldn’t sign you in with those details.");
-    }finally {
+    } finally {
       setIsSubmitting(false);
     }
   }, [formData, router, isSubmitting]);
