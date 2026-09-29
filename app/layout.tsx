@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { LearnerSessionGuard } from "@/components/auth/learner-session-guard";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -8,5 +10,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
-  return <html lang="en"><body>{children}</body></html>;
+  return (
+    <html lang="en">
+      <body>
+        <LearnerSessionGuard />
+        {children}
+      </body>
+    </html>
+  );
 }

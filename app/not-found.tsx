@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ErrorScreen } from "@/components/error/error-screen";
+import { NotFoundScreen } from "@/components/error/not-found-screen";
 
 export const metadata: Metadata = {
   title: "Page not found | Uye",
@@ -8,13 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function NotFound() {
-  return (
-    <ErrorScreen
-      actionHref="/"
-      actionLabel="Back home"
-      code="404"
-      label="Page not found"
-      message="The page you are looking for is not here."
-    />
-  );
+  return <NotFoundScreen />;
 }

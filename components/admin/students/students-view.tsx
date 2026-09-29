@@ -50,13 +50,12 @@ export function StudentsView({ filteredStudents, search, filter, onSearch, onFil
         </div>
 
         <div className="hidden overflow-x-auto xl:block">
-          <table className="w-full min-w-[940px] text-left">
+          <table className="w-full min-w-[800px] text-left">
             <thead>
               <tr className="border-b border-[#edf0f5] bg-[#fbfcfe] text-[11px] font-bold uppercase tracking-[0.1em] text-ink/40">
                 <th className="w-[30%] px-6 py-4">Student</th>
                 <th className="px-4 py-4">Student ID</th>
                 <th className="px-4 py-4">Current level</th>
-                <th className="px-4 py-4">Progress</th>
                 <th className="px-4 py-4">Level access</th>
                 <th className="px-4 py-4">Status</th>
                 <th className="px-6 py-4"><span className="sr-only">Actions</span></th>
@@ -64,7 +63,7 @@ export function StudentsView({ filteredStudents, search, filter, onSearch, onFil
             </thead>
             <tbody>
               {filteredStudents.map((student) => <StudentRow key={student.uid} onEdit={onEdit} onToggleAccess={onToggleAccess} student={student} />)}
-              {filteredStudents.length === 0 && <tr><td className="px-6 py-16 text-center text-sm text-ink/45" colSpan={7}>{studentCopy.noResults}</td></tr>}
+              {filteredStudents.length === 0 && <tr><td className="px-6 py-16 text-center text-sm text-ink/45" colSpan={6}>{studentCopy.noResults}</td></tr>}
             </tbody>
           </table>
         </div>
@@ -108,15 +107,6 @@ function StudentCard({ student, onEdit, onToggleAccess }: { student: Student; on
           <p className="mt-1 truncate font-semibold text-ink/65">{student.level}</p>
         </div>
         <div>
-          <p className="text-ink/43">Progress</p>
-          <div className="mt-2 flex items-center gap-2">
-            <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-[#e9ecf3]">
-              <div className="h-full rounded-full bg-brand" style={{ width: `${student.progress}%` }} />
-            </div>
-            <span className="font-bold text-ink/55">{student.progress}%</span>
-          </div>
-        </div>
-        <div>
           <p className="text-ink/43">Status</p>
           <div className="mt-1"><StatusPill status={student.status} /></div>
         </div>
@@ -147,12 +137,6 @@ function StudentRow({ student, onEdit, onToggleAccess }: { student: Student; onE
       </td>
       <td className="px-4 py-4 font-mono text-xs text-ink/55">{student.uid}</td>
       <td className="px-4 py-4 text-sm text-ink/65">{student.level}</td>
-      <td className="px-4 py-4">
-        <div className="flex items-center gap-2">
-          <div className="h-1.5 w-[70px] overflow-hidden rounded-full bg-[#e9ecf3]"><div className="h-full rounded-full bg-brand" style={{ width: `${student.progress}%` }} /></div>
-          <span className="text-xs font-bold text-ink/55">{student.progress}%</span>
-        </div>
-      </td>
       <td className="px-4 py-4">
         <div className="flex items-center gap-2.5">
           <Toggle checked={student.levelOpen} label={`Toggle level access for ${student.name}`} onChange={() => onToggleAccess(student.uid)} />

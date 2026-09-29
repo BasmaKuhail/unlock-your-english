@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 
-import { CloseIcon } from "@/components/admin/icons";
+import { CloseIcon, EyeIcon, EyeOffIcon } from "@/components/admin/icons";
 import { Field } from "@/components/admin/ui/field";
 import { Toggle } from "@/components/admin/ui/toggle";
 import type { Level, Student } from "@/lib/admin/types";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 
 export function StudentEditor({ student, levels, onClose, onSave }: { student: Student; levels: Level[]; onClose: () => void; onSave: (student: Student) => void }) {
   const [draft, setDraft] = useState(student);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -42,22 +43,19 @@ export function StudentEditor({ student, levels, onClose, onSave }: { student: S
               <input className="input" onChange={(event) => setDraft({ ...draft, email: event.target.value })} type="email" value={draft.email} />
             </Field>
             <Field label="Password">
-              <input className="input" onChange={(event) => setDraft({ ...draft, password: event.target.value })} value={draft.password} />
+              <div className="relative">
+                <input className="input pr-12" id="student-password" onChange={(event) => setDraft({ ...draft, password: event.target.value })} type={isPasswordVisible ? "text" : "password"} value={draft.password} />
+                <button aria-label={isPasswordVisible ? "Hide password" : "Show password"} aria-pressed={isPasswordVisible} className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2 text-ink/45 transition hover:bg-[#edf2ff] hover:text-brand focus:outline-none focus:ring-2 focus:ring-brand/20" onClick={() => setIsPasswordVisible((visible) => !visible)} type="button">
+                  {isPasswordVisible ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                </button>
+              </div>
             </Field>
 
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Current level">
-                <select className="input" onChange={(event) => setDraft({ ...draft, level: event.target.value })} value={draft.level}>
-                  {levels.map((level) => <option key={level.id}>{level.title}</option>)}
-                </select>
-              </Field>
-              <Field label="Progress">
-                <div className="relative">
-                  <input className="input pr-10" max="100" min="0" onChange={(event) => setDraft({ ...draft, progress: Number(event.target.value) })} type="number" value={draft.progress} />
-                  <span className="pointer-events-none absolute right-4 top-3.5 text-sm text-ink/40">%</span>
-                </div>
-              </Field>
-            </div>
+            <Field label="Current level">
+              <select className="input" onChange={(event) => setDraft({ ...draft, level: event.target.value })} value={draft.level}>
+                {levels.map((level) => <option key={level.id}>{level.title}</option>)}
+              </select>
+            </Field>
 
             <div className="rounded-xl border border-[#e7e9f0] p-4">
               <div className="flex items-center justify-between gap-4">
