@@ -4,7 +4,8 @@ import { ArrowRightIcon, BookIcon, GridIcon, UsersIcon } from "@/components/admi
 import { PageHeading } from "@/components/admin/ui/page-heading";
 import { StatusPill } from "@/components/admin/ui/status-pill";
 import { activityChart, dashboardCopy, levelProgress } from "@/lib/admin/content";
-import type { AdminView, Level, Student } from "@/lib/admin/types";
+import type { AdminView, Level } from "@/lib/admin/types";
+import type { Student } from "@/types/student";
 import { cn } from "@/lib/cn";
 
 type DashboardViewProps = {
