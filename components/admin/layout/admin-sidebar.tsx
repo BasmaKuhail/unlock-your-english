@@ -1,9 +1,12 @@
+"use client";
+
 import Link from "next/link";
 
 import { BookIcon, GridIcon, MoreIcon, UsersIcon } from "@/components/admin/icons";
 import { AdminAvatar } from "@/components/admin/ui/admin-avatar";
+import { useAdmin } from "@/context/admin-context";
 import { adminNavigation, adminPaths } from "@/lib/admin/content";
-import type { AdminProfile, AdminView } from "@/lib/admin/types";
+import type { AdminView } from "@/lib/admin/types";
 import { cn } from "@/lib/cn";
 
 const navigationIcons = {
@@ -12,13 +15,10 @@ const navigationIcons = {
   users: UsersIcon,
 };
 
-export function AdminSidebar({
-  adminProfile,
-  view,
-}: {
-  adminProfile: AdminProfile;
-  view: AdminView;
-}) {
+export function AdminSidebar({ view }: { view: AdminView }) {
+  const { admin } = useAdmin();
+  const displayName = admin?.displayName?.trim() || "Administrator";
+
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[252px] flex-col border-r border-[#e8eaf1] bg-white px-5 py-7 lg:flex">
       <div className="flex w-fit flex-col">
@@ -43,8 +43,8 @@ export function AdminSidebar({
       <Link aria-label="View admin profile" className="mt-5 flex items-center gap-3 rounded-xl px-2 py-2 transition hover:bg-[#f6f7fb]" href={adminPaths.profile}>
         <AdminAvatar className="h-9 w-9 rounded-full" />
         <div className="min-w-0">
-          <p className="truncate text-sm font-bold">{adminProfile.name}</p>
-          <p className="truncate text-xs text-ink/45">{adminProfile.role}</p>
+          <p className="truncate text-sm font-bold">{displayName}</p>
+          <p className="truncate text-xs text-ink/45">Administrator</p>
         </div>
         <MoreIcon className="ml-auto h-4 w-4 text-ink/35" />
       </Link>

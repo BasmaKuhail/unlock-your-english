@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import adminAvatar from "@/public/body-gard.png";
+import adminAvatar from "@/public/adminProfile.png";
 import { cn } from "@/lib/cn";
 
 export function AdminAvatar({ className }: { className?: string }) {
@@ -8,7 +8,7 @@ export function AdminAvatar({ className }: { className?: string }) {
     <Image
       alt="Administrator avatar"
       className={cn(
-        "bg-[#e5edff] object-cover object-[50%_35%]",
+        "bg-[#9edcff] object-cover object-center",
         className,
       )}
       height={80}

@@ -1,19 +1,17 @@
+"use client";
+
 import Link from "next/link";
 
 import { BellIcon } from "@/components/admin/icons";
-import { AdminLogoutButton } from "@/components/admin/layout/admin-logout-btn";
 import { AdminAvatar } from "@/components/admin/ui/admin-avatar";
+import { useAdmin } from "@/context/admin-context";
 import { adminPageLabels, adminPaths } from "@/lib/admin/content";
-import type { AdminProfile, AdminView } from "@/lib/admin/types";
+import type { AdminView } from "@/lib/admin/types";
 
-export function AdminHeader({
-  adminProfile,
-  view,
-}: {
-  adminProfile: AdminProfile;
-  view: AdminView;
-}) {
+export function AdminHeader({ view }: { view: AdminView }) {
+  const { admin } = useAdmin();
   const viewLabel = adminPageLabels[view];
+  const displayName = admin?.displayName?.trim() || "Administrator";
 
   return (
     <header className="sticky top-0 z-20 border-b border-[#e8eaf1] bg-white/90 px-5 py-4 backdrop-blur lg:px-10">
@@ -27,7 +25,6 @@ export function AdminHeader({
         </div>
 
         <div className="ml-auto flex items-center gap-3">
-          <AdminLogoutButton />
           <button aria-label="Notifications" className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink/55 transition hover:bg-[#f3f5fa]" type="button">
             <BellIcon className="h-5 w-5" />
             <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-brand" />
@@ -39,7 +36,7 @@ export function AdminHeader({
             href={adminPaths.profile}
           >
             <span className="hidden text-right sm:block">
-              <span className="block text-xs font-bold">{adminProfile.name}</span>
+              <span className="block text-xs font-bold">{displayName}</span>
               <span className="block text-[11px] text-ink/45">Admin</span>
             </span>
             <AdminAvatar className="h-9 w-9 rounded-full" />

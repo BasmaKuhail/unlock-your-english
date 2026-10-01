@@ -12,11 +12,11 @@ export async function AdminRoute({ view }: { view: AdminView }) {
     redirect("/admin/login");
   }
 
-  const adminProfile = await getAdminProfile(admin);
-
   if (view === "profile") {
-    return <AdminProfilePage adminProfile={adminProfile} />;
+    return <AdminProfilePage />;
   }
+
+  const adminProfile = await getAdminProfile(admin);
 
   return <AdminDashboard adminProfile={adminProfile} view={view} />;
 }

@@ -21,7 +21,6 @@ export function AdminDashboard({
 
   return (
     <DashboardLayout
-      adminProfile={adminProfile}
       toast={dashboard.toast}
       view={view}
     >
