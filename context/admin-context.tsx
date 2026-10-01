@@ -16,14 +16,19 @@ export type AdminProfile = {
   photoUrl: string | null;
   status: "active" | "frozen" | null;
 };
+type UpdateAdminInput = {
+  displayName: string;
+  email: string;
+  newPassword?: string;
+};
 
 type AdminContextValue = {
   admin: AdminProfile | null;
   isLoading: boolean;
   error: string | null;
   refreshAdmin: () => Promise<void>;
+  updateAdmin: (input: UpdateAdminInput) => Promise<AdminProfile>;
 };
-
 const AdminContext = createContext<AdminContextValue | null>(null);
 
 export function AdminProvider({ children }: { children: ReactNode }) {
@@ -57,6 +62,36 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const updateAdmin = useCallback(
+  async (input: UpdateAdminInput): Promise<AdminProfile> => {
+    const response = await fetch("/api/admin/profile", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        displayName: input.displayName,
+        email: input.email,
+        ...(input.newPassword
+          ? { newPassword: input.newPassword }
+          : {}),
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error ?? "Unable to update administrator profile.",
+      );
+    }
+
+    setAdmin(data.admin);
+
+    return data.admin;
+  },
+  [],
+);
   useEffect(() => {
     queueMicrotask(() => {
       void loadAdmin();
@@ -70,6 +105,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         isLoading,
         error,
         refreshAdmin: loadAdmin,
+        updateAdmin
       }}
     >
       {children}

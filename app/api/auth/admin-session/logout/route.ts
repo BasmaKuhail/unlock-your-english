@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function POST() {
   const response = NextResponse.json({
@@ -14,4 +15,14 @@ export async function POST() {
   });
 
   return response;
+}
+
+export async function DELETE() {
+  const cookieStore = await cookies();
+
+  cookieStore.delete("admin_session");
+
+  return NextResponse.json({
+    success: true,
+  });
 }
