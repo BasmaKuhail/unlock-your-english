@@ -5,21 +5,19 @@ import type { ReactNode } from "react";
 import { AdminHeader } from "@/components/admin/layout/admin-header";
 import { AdminSidebar } from "@/components/admin/layout/admin-sidebar";
 import { MobileAdminNavigation } from "@/components/admin/layout/mobile-admin-navigation";
-import type { AdminProfile } from "@/lib/auth/admin-session";
-import type { AdminView } from "@/lib/admin/types";
+import type { AdminProfile, AdminView } from "@/lib/admin/types";
 
 type DashboardLayoutProps = {
   children: ReactNode;
   view: AdminView;
-  onViewChange: (view: AdminView) => void;
   toast?: string | null;
   adminProfile: AdminProfile;
 };
 
-export function DashboardLayout({ children, view, onViewChange, toast, adminProfile }: DashboardLayoutProps) {
+export function DashboardLayout({ children, view, toast, adminProfile }: DashboardLayoutProps) {
   return (
     <div className="min-h-dvh overflow-x-clip bg-[#f7f8fc] text-ink">
-      <AdminSidebar adminProfile={adminProfile} onViewChange={onViewChange} view={view} />
+      <AdminSidebar adminProfile={adminProfile} view={view} />
 
       <div className="lg:pl-[252px]">
         <AdminHeader adminProfile={adminProfile} view={view} />
@@ -28,7 +26,7 @@ export function DashboardLayout({ children, view, onViewChange, toast, adminProf
         </main>
       </div>
 
-      <MobileAdminNavigation onViewChange={onViewChange} view={view} />
+      <MobileAdminNavigation view={view} />
 
       {toast && (
         <div

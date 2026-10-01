@@ -1,20 +1,10 @@
-import { AdminDashboard } from "@/components/admin/admin-dashboard";
-import { redirect } from "next/navigation";
-import { getAdminProfile, getAdminSession } from "@/lib/auth/admin-session";
+import { AdminRoute } from "@/components/admin/admin-route";
 
 export const metadata = {
   title: "Admin dashboard | Uye",
   description: "Manage students and learning content for Uye.",
 };
 
-export default async function AdminPage() {
-  const admin = await getAdminSession();
-
-  if (!admin) {
-    redirect("/admin/login");
-  }
-
-  const adminProfile = await getAdminProfile(admin);
-
-  return <AdminDashboard adminProfile={adminProfile} />;
+export default function AdminPage() {
+  return <AdminRoute view="dashboard" />;
 }

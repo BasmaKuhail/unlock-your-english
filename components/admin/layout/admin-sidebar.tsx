@@ -2,8 +2,7 @@ import Link from "next/link";
 
 import { BookIcon, GridIcon, MoreIcon, UsersIcon } from "@/components/admin/icons";
 import { adminNavigation } from "@/lib/admin/content";
-import type { AdminProfile } from "@/lib/auth/admin-session";
-import type { AdminView } from "@/lib/admin/types";
+import type { AdminProfile, AdminView } from "@/lib/admin/types";
 import { cn } from "@/lib/cn";
 
 const navigationIcons = {
@@ -15,11 +14,9 @@ const navigationIcons = {
 export function AdminSidebar({
   adminProfile,
   view,
-  onViewChange,
 }: {
   adminProfile: AdminProfile;
   view: AdminView;
-  onViewChange: (view: AdminView) => void;
 }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[252px] flex-col border-r border-[#e8eaf1] bg-white px-5 py-7 lg:flex">
@@ -30,7 +27,7 @@ export function AdminSidebar({
           {adminNavigation.map((item) => {
             const Icon = navigationIcons[item.icon];
 
-            return <button className={cn("cursor-pointer flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition", view === item.value ? "bg-[#eaf0ff] text-brand" : "text-ink/55 hover:bg-[#f6f7fb] hover:text-ink")} key={item.value} onClick={() => onViewChange(item.value)} type="button"><Icon className="h-[19px] w-[19px]" />{item.label}</button>;
+            return <Link className={cn("flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition", view === item.value ? "bg-[#eaf0ff] text-brand" : "text-ink/55 hover:bg-[#f6f7fb] hover:text-ink")} href={item.href} key={item.value}><Icon className="h-[19px] w-[19px]" />{item.label}</Link>;
           })}
         </nav>
       </div>

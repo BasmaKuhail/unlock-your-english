@@ -3,12 +3,9 @@ import "server-only";
 import { cookies } from "next/headers";
 
 import { adminAuth } from "@/lib/firebase/admin";
+import type { AdminProfile } from "@/lib/admin/types";
 
-export type AdminProfile = {
-  name: string;
-  initials: string;
-  role: "Administrator";
-};
+export type { AdminProfile } from "@/lib/admin/types";
 
 export async function getAdminSession() {
   const cookieStore = await cookies();

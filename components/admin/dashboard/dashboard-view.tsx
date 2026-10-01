@@ -1,10 +1,11 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { ArrowRightIcon, BookIcon, GridIcon, UsersIcon } from "@/components/admin/icons";
 import { PageHeading } from "@/components/admin/ui/page-heading";
 import { StatusPill } from "@/components/admin/ui/status-pill";
-import { activityChart, dashboardCopy, levelProgress } from "@/lib/admin/content";
-import type { AdminView, Level } from "@/lib/admin/types";
+import { activityChart, adminPaths, dashboardCopy, levelProgress } from "@/lib/admin/content";
+import type { Level } from "@/lib/admin/types";
 import type { Student } from "@/types/student";
 import { cn } from "@/lib/cn";
 
@@ -14,10 +15,9 @@ type DashboardViewProps = {
   activeStudents: number;
   averageProgress: number;
   levels: Level[];
-  onNavigate: (view: AdminView) => void;
 };
 
-export function DashboardView({ adminName, students, activeStudents, averageProgress, levels, onNavigate }: DashboardViewProps) {
+export function DashboardView({ adminName, students, activeStudents, averageProgress, levels }: DashboardViewProps) {
   const recentStudents = students.slice(0, 4);
 
   return (
@@ -40,9 +40,9 @@ export function DashboardView({ adminName, students, activeStudents, averageProg
               <h2 className="text-lg font-bold tracking-[-0.035em]">{dashboardCopy.studentActivity.title}</h2>
               <p className="mt-1 text-sm text-ink/50">{dashboardCopy.studentActivity.description}</p>
             </div>
-            <button className="inline-flex items-center gap-1 text-sm font-bold text-brand hover:text-brand-dark" onClick={() => onNavigate("students")} type="button">
+            <Link className="inline-flex items-center gap-1 text-sm font-bold text-brand hover:text-brand-dark" href={adminPaths.students}>
               View students <ArrowRightIcon className="h-4 w-4" />
-            </button>
+            </Link>
           </div>
           <div className="mt-7 flex h-48 items-end gap-2 sm:mt-8 sm:h-52 sm:gap-5">
             {activityChart.map(({ day, value }, index) => (
@@ -61,9 +61,9 @@ export function DashboardView({ adminName, students, activeStudents, averageProg
               <h2 className="text-lg font-bold tracking-[-0.035em]">{dashboardCopy.levelsAtAGlance.title}</h2>
               <p className="mt-1 text-sm text-ink/50">{dashboardCopy.levelsAtAGlance.description}</p>
             </div>
-            <button aria-label="Manage levels" className="shrink-0 rounded-lg p-1.5 text-brand hover:bg-[#edf2ff]" onClick={() => onNavigate("levels")} type="button">
+            <Link aria-label="Manage levels" className="shrink-0 rounded-lg p-1.5 text-brand hover:bg-[#edf2ff]" href={adminPaths.levels}>
               <ArrowRightIcon className="h-5 w-5" />
-            </button>
+            </Link>
           </div>
           <div className="mt-5 space-y-4">
             {levels.map((level, index) => (
@@ -87,9 +87,9 @@ export function DashboardView({ adminName, students, activeStudents, averageProg
             <h2 className="text-lg font-bold tracking-[-0.035em]">{dashboardCopy.recentStudents.title}</h2>
             <p className="mt-1 text-sm text-ink/50">{dashboardCopy.recentStudents.description}</p>
           </div>
-          <button className="hidden shrink-0 text-sm font-bold text-brand sm:block" onClick={() => onNavigate("students")} type="button">
+          <Link className="hidden shrink-0 text-sm font-bold text-brand sm:block" href={adminPaths.students}>
             See all students
-          </button>
+          </Link>
         </div>
 
         <div className="divide-y divide-[#edf0f5] sm:hidden">

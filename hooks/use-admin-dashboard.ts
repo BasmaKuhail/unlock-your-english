@@ -6,15 +6,12 @@ import {
   getStudentTone,
 } from "@/lib/admin/student-presentation";
 import type {
-  AdminView,
   Level,
   StudentFilter,
 } from "@/lib/admin/types";
 import {Student} from "@/types/student"
 
 export function useAdminDashboard() {
-  const [view, setView] = useState<AdminView>("dashboard");
-
   const [students, setStudents] = useState<Student[]>([]);
   const [isLoadingStudents, setIsLoadingStudents] = useState(true);
 
@@ -126,40 +123,142 @@ export function useAdminDashboard() {
   }, []);
 
   const saveStudent = useCallback(
-    (student: Student) => {
+    
+  async (student: Student, newPassword?: string) => {
+    console.log("Password received:", {
+  received: newPassword !== undefined,
+  length: newPassword?.length,
+});
+    try {
+      const response = await fetch(
+        `/api/admin/students/${student.uid}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            displayName: student.name,
+            currentLevel: student.level,
+            levelOpen: student.levelOpen,
+            status:
+              student.status === "Frozen"
+                ? "frozen"
+                : "active",
+            ...(newPassword
+              ? { newPassword }
+              : {}),
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ?? "Unable to update student.",
+        );
+      }
+
+      const updatedStudent: Student = {
+        ...student,
+
+        uid: data.student.uid,
+        studentId: data.student.studentId,
+        name: data.student.name,
+        level: data.student.level,
+        levelOpen: data.student.levelOpen,
+        status: data.student.status,
+
+        initials: getStudentInitials(data.student.name),
+        tone: getStudentTone(data.student.studentId),
+      };
+
       setStudents((current) =>
-        current.some((item) => item.uid === student.uid)
-          ? current.map((item) =>
-              item.uid === student.uid ? student : item,
-            )
-          : [...current, student],
+        current.map((item) =>
+          item.uid === updatedStudent.uid
+            ? updatedStudent
+            : item,
+        ),
       );
 
       setSelectedStudent(null);
 
-      notify(`${student.name}'s details were saved.`);
-    },
-    [notify],
-  );
+      notify(`${updatedStudent.name}'s details were saved.`);
+    } catch (error) {
+      console.error("Failed to update student:", error);
+
+      notify(
+        error instanceof Error
+          ? error.message
+          : "Unable to update student.",
+      );
+    }
+  },
+  [notify],
+);
 
   const addStudent = useCallback(() => {
     setIsCreatingStudent(true);
   }, []);
 
-  const toggleStudentAccess = useCallback((uid: string) => {
-    // Still local-only for now.
-    // We'll connect this to Firebase when we build student updates.
-    setStudents((current) =>
-      current.map((student) =>
-        student.uid === uid
-          ? {
-              ...student,
-              levelOpen: !student.levelOpen,
-            }
-          : student,
-      ),
-    );
-  }, []);
+  const toggleStudentAccess = useCallback(
+  async (uid: string) => {
+    const student = students.find((item) => item.uid === uid);
+
+    if (!student) {
+      return;
+    }
+
+    const nextLevelOpen = !student.levelOpen;
+
+    try {
+      const response = await fetch(`/api/admin/students/${uid}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          levelOpen: nextLevelOpen,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ?? "Unable to update level access.",
+        );
+      }
+
+      setStudents((current) =>
+        current.map((item) =>
+          item.uid === uid
+            ? {
+                ...item,
+                levelOpen: data.student.levelOpen,
+              }
+            : item,
+        ),
+      );
+
+      notify(
+        `${student.name}'s level access was ${
+          data.student.levelOpen ? "opened" : "closed"
+        }.`,
+      );
+    } catch (error) {
+      console.error("Failed to update level access:", error);
+
+      notify(
+        error instanceof Error
+          ? error.message
+          : "Unable to update level access.",
+      );
+    }
+  },
+  [students, notify],
+);
 
   const saveLevel = useCallback(
     (level: Level) => {
@@ -261,12 +360,10 @@ export function useAdminDashboard() {
     setSelectedLevel,
     setSelectedStudent,
     setStudentFilter,
-    setView,
     studentFilter,
     students,
     toast,
     toggleStudentAccess,
-    view,
     isCreatingStudent,
     setIsCreatingStudent,
     createStudent,

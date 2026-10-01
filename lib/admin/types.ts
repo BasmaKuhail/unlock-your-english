@@ -1,5 +1,11 @@
 export type AdminView = "dashboard" | "students" | "levels";
 
+export type AdminProfile = {
+  name: string;
+  initials: string;
+  role: "Administrator";
+};
+
 export type StudentStatus = "Active" | "Frozen";
 export type StudentFilter = "All" | StudentStatus;
 
@@ -34,4 +40,5 @@ export type AdminNavigationItem = {
   label: string;
   value: AdminView;
   icon: "grid" | "users" | "book";
+  href: string;
 };

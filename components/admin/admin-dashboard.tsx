@@ -8,30 +8,34 @@ import { LevelsView } from "@/components/admin/levels/levels-view";
 import { StudentEditor } from "@/components/admin/students/student-editor";
 import { StudentsView } from "@/components/admin/students/students-view";
 import { DashboardLayout } from "@/layouts/dashboard-layout";
-import type { AdminProfile } from "@/lib/auth/admin-session";
+import type { AdminProfile, AdminView } from "@/lib/admin/types";
 
-export function AdminDashboard({ adminProfile }: { adminProfile: AdminProfile }) {
+export function AdminDashboard({
+  adminProfile,
+  view,
+}: {
+  adminProfile: AdminProfile;
+  view: AdminView;
+}) {
   const dashboard = useAdminDashboard();
 
   return (
     <DashboardLayout
       adminProfile={adminProfile}
-      onViewChange={dashboard.setView}
       toast={dashboard.toast}
-      view={dashboard.view}
+      view={view}
     >
-      {dashboard.view === "dashboard" && (
+      {view === "dashboard" && (
         <DashboardView
           activeStudents={dashboard.activeStudents}
           averageProgress={dashboard.averageProgress}
           levels={dashboard.levels}
           adminName={adminProfile.name}
-          onNavigate={dashboard.setView}
           students={dashboard.students}
         />
       )}
 
-      {dashboard.view === "students" && (
+      {view === "students" && (
         <StudentsView
           filter={dashboard.studentFilter}
           filteredStudents={dashboard.filteredStudents}
@@ -44,7 +48,7 @@ export function AdminDashboard({ adminProfile }: { adminProfile: AdminProfile })
         />
       )}
 
-      {dashboard.view === "levels" && (
+      {view === "levels" && (
         <LevelsView
           levels={dashboard.levels}
           onAdd={dashboard.addLevel}

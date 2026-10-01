@@ -3,8 +3,7 @@ import Link from "next/link";
 import { BellIcon } from "@/components/admin/icons";
 import { AdminLogoutButton } from "@/components/admin/layout/admin-logout-btn";
 import { adminNavigation } from "@/lib/admin/content";
-import type { AdminProfile } from "@/lib/auth/admin-session";
-import type { AdminView } from "@/lib/admin/types";
+import type { AdminProfile, AdminView } from "@/lib/admin/types";
 
 export function AdminHeader({
   adminProfile,
