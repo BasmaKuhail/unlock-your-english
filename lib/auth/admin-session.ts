@@ -45,6 +45,7 @@ export async function getAdminProfile(
 
     return {
       name,
+      email: user.email || admin.email || "Not available",
       initials: getInitials(name),
       role: "Administrator",
     };
@@ -53,6 +54,7 @@ export async function getAdminProfile(
 
     return {
       name,
+      email: admin.email || "Not available",
       initials: getInitials(name),
       role: "Administrator",
     };

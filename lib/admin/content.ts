@@ -1,10 +1,18 @@
-import type { AdminNavigationItem } from "@/lib/admin/types";
+import type { AdminNavigationItem, AdminView } from "@/lib/admin/types";
 
 export const adminPaths = {
   dashboard: "/admin",
   students: "/admin/students",
   levels: "/admin/levels",
+  profile: "/admin/profile",
 } as const;
+
+export const adminPageLabels: Record<AdminView, string> = {
+  dashboard: "Dashboard",
+  students: "Students",
+  levels: "Levels",
+  profile: "Profile",
+};
 
 export const adminNavigation: AdminNavigationItem[] = [
   { label: "Dashboard", value: "dashboard", icon: "grid", href: adminPaths.dashboard },

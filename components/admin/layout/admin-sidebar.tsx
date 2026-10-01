@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 import { BookIcon, GridIcon, MoreIcon, UsersIcon } from "@/components/admin/icons";
-import { adminNavigation } from "@/lib/admin/content";
+import { AdminAvatar } from "@/components/admin/ui/admin-avatar";
+import { adminNavigation, adminPaths } from "@/lib/admin/content";
 import type { AdminProfile, AdminView } from "@/lib/admin/types";
 import { cn } from "@/lib/cn";
 
@@ -39,16 +40,14 @@ export function AdminSidebar({
           Get help <span aria-hidden="true">→</span>
         </button>
       </div> */}
-      <div className="mt-5 flex items-center gap-3 px-2">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e5edff] text-xs font-bold text-brand">
-          {adminProfile.initials}
-        </span>
+      <Link aria-label="View admin profile" className="mt-5 flex items-center gap-3 rounded-xl px-2 py-2 transition hover:bg-[#f6f7fb]" href={adminPaths.profile}>
+        <AdminAvatar className="h-9 w-9 rounded-full" />
         <div className="min-w-0">
           <p className="truncate text-sm font-bold">{adminProfile.name}</p>
           <p className="truncate text-xs text-ink/45">{adminProfile.role}</p>
         </div>
         <MoreIcon className="ml-auto h-4 w-4 text-ink/35" />
-      </div>
+      </Link>
     </aside>
   );
 }

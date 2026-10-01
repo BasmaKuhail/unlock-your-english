@@ -2,7 +2,8 @@ import Link from "next/link";
 
 import { BellIcon } from "@/components/admin/icons";
 import { AdminLogoutButton } from "@/components/admin/layout/admin-logout-btn";
-import { adminNavigation } from "@/lib/admin/content";
+import { AdminAvatar } from "@/components/admin/ui/admin-avatar";
+import { adminPageLabels, adminPaths } from "@/lib/admin/content";
 import type { AdminProfile, AdminView } from "@/lib/admin/types";
 
 export function AdminHeader({
@@ -12,7 +13,7 @@ export function AdminHeader({
   adminProfile: AdminProfile;
   view: AdminView;
 }) {
-  const viewLabel = adminNavigation.find((item) => item.value === view)?.label;
+  const viewLabel = adminPageLabels[view];
 
   return (
     <header className="sticky top-0 z-20 border-b border-[#e8eaf1] bg-white/90 px-5 py-4 backdrop-blur lg:px-10">
@@ -32,11 +33,17 @@ export function AdminHeader({
             <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-brand" />
           </button>
           <span className="hidden h-7 w-px bg-[#e8eaf1] sm:block" />
-          <span className="hidden text-right sm:block">
-            <span className="block text-xs font-bold">{adminProfile.name}</span>
-            <span className="block text-[11px] text-ink/45">Admin</span>
-          </span>
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e5edff] text-xs font-bold text-brand">{adminProfile.initials}</span>
+          <Link
+            aria-label="View admin profile"
+            className="flex items-center gap-3 rounded-full p-1 transition hover:bg-[#f3f5fa]"
+            href={adminPaths.profile}
+          >
+            <span className="hidden text-right sm:block">
+              <span className="block text-xs font-bold">{adminProfile.name}</span>
+              <span className="block text-[11px] text-ink/45">Admin</span>
+            </span>
+            <AdminAvatar className="h-9 w-9 rounded-full" />
+          </Link>
         </div>
       </div>
     </header>

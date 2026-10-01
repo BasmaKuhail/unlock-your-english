@@ -24,7 +24,7 @@ function isLearner(email: string | null) {
  */
 export function LearnerSessionGuard() {
   useEffect(() => {
-    let expiryTimer: ReturnType<typeof setTimeout> | undefined;
+    let expiryTimer: number | undefined;
 
     function clearExpiryTimer() {
       if (expiryTimer) {

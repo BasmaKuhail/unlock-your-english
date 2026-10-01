@@ -1,7 +1,8 @@
-export type AdminView = "dashboard" | "students" | "levels";
+export type AdminView = "dashboard" | "students" | "levels" | "profile";
 
 export type AdminProfile = {
   name: string;
+  email: string;
   initials: string;
   role: "Administrator";
 };
