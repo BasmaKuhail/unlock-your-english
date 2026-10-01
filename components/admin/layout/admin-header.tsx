@@ -2,10 +2,17 @@ import Link from "next/link";
 
 import { BellIcon } from "@/components/admin/icons";
 import { AdminLogoutButton } from "@/components/admin/layout/admin-logout-btn";
-import { adminNavigation, adminProfile } from "@/lib/admin/content";
+import { adminNavigation } from "@/lib/admin/content";
+import type { AdminProfile } from "@/lib/auth/admin-session";
 import type { AdminView } from "@/lib/admin/types";
 
-export function AdminHeader({ view }: { view: AdminView }) {
+export function AdminHeader({
+  adminProfile,
+  view,
+}: {
+  adminProfile: AdminProfile;
+  view: AdminView;
+}) {
   const viewLabel = adminNavigation.find((item) => item.value === view)?.label;
 
   return (

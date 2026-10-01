@@ -9,6 +9,7 @@ import type { Student } from "@/types/student";
 import { cn } from "@/lib/cn";
 
 type DashboardViewProps = {
+  adminName: string;
   students: Student[];
   activeStudents: number;
   averageProgress: number;
@@ -16,12 +17,12 @@ type DashboardViewProps = {
   onNavigate: (view: AdminView) => void;
 };
 
-export function DashboardView({ students, activeStudents, averageProgress, levels, onNavigate }: DashboardViewProps) {
+export function DashboardView({ adminName, students, activeStudents, averageProgress, levels, onNavigate }: DashboardViewProps) {
   const recentStudents = students.slice(0, 4);
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <PageHeading eyebrow={dashboardCopy.eyebrow} title={dashboardCopy.title}>
+      <PageHeading eyebrow={dashboardCopy.eyebrow} title={`Welcome back, ${adminName}.`}>
         <p className="max-w-xl pb-1 text-sm text-ink/50">{dashboardCopy.description}</p>
       </PageHeading>
 

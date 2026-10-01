@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 import { BookIcon, GridIcon, MoreIcon, UsersIcon } from "@/components/admin/icons";
-import { adminNavigation, adminProfile } from "@/lib/admin/content";
+import { adminNavigation } from "@/lib/admin/content";
+import type { AdminProfile } from "@/lib/auth/admin-session";
 import type { AdminView } from "@/lib/admin/types";
 import { cn } from "@/lib/cn";
 
@@ -11,7 +12,15 @@ const navigationIcons = {
   users: UsersIcon,
 };
 
-export function AdminSidebar({ view, onViewChange }: { view: AdminView; onViewChange: (view: AdminView) => void }) {
+export function AdminSidebar({
+  adminProfile,
+  view,
+  onViewChange,
+}: {
+  adminProfile: AdminProfile;
+  view: AdminView;
+  onViewChange: (view: AdminView) => void;
+}) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[252px] flex-col border-r border-[#e8eaf1] bg-white px-5 py-7 lg:flex">
       <div className="flex w-fit flex-col">

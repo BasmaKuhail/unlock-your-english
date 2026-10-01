@@ -54,6 +54,7 @@ export function StudentEditor(props: StudentEditorProps) {
 
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -155,54 +156,51 @@ export function StudentEditor(props: StudentEditorProps) {
               />
             </Field>
 
-            <Field
-              label={isCreateMode ? "Password" : "New password"}
-            >
-              <div className="relative">
-                <input
-                  autoComplete="new-password"
-                  className="input pr-12"
-                  id="student-password"
-                  minLength={8}
-                  onChange={(event) => setPassword(event.target.value)}
-                  placeholder={
-                    isCreateMode
-                      ? "Minimum 8 characters"
-                      : "Leave blank to keep current password"
-                  }
-                  required={isCreateMode}
-                  type={isPasswordVisible ? "text" : "password"}
-                  value={password}
-                />
+            {isCreateMode || isResettingPassword ? (
+              <Field label={isCreateMode ? "Password" : "New password"}>
+                <div className="relative">
+                  <input
+                    autoComplete="new-password"
+                    className="input pr-12"
+                    id="student-password"
+                    minLength={8}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="Minimum 8 characters"
+                    required={isCreateMode || isResettingPassword}
+                    type={isPasswordVisible ? "text" : "password"}
+                    value={password}
+                  />
 
-                <button
-                  aria-label={
-                    isPasswordVisible
-                      ? "Hide password"
-                      : "Show password"
-                  }
-                  aria-pressed={isPasswordVisible}
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2 text-ink/45 transition hover:bg-[#edf2ff] hover:text-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                  onClick={() =>
-                    setIsPasswordVisible((visible) => !visible)
-                  }
-                  type="button"
-                >
-                  {isPasswordVisible ? (
-                    <EyeOffIcon className="h-4 w-4" />
-                  ) : (
-                    <EyeIcon className="h-4 w-4" />
-                  )}
-                </button>
-              </div>
-
-              {!isCreateMode && (
-                <p className="mt-2 text-xs leading-5 text-ink/42">
-                  Leave this empty to keep the student&apos;s current
-                  password.
-                </p>
-              )}
-            </Field>
+                  <button
+                    aria-label={
+                      isPasswordVisible
+                        ? "Hide password"
+                        : "Show password"
+                    }
+                    aria-pressed={isPasswordVisible}
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-lg p-2 text-ink/45 transition hover:bg-[#edf2ff] hover:text-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                    onClick={() =>
+                      setIsPasswordVisible((visible) => !visible)
+                    }
+                    type="button"
+                  >
+                    {isPasswordVisible ? (
+                      <EyeOffIcon className="h-4 w-4" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </Field>
+            ) : (
+              <button
+                className="w-full rounded-xl border border-[#dce4ff] bg-[#f5f7ff] px-4 py-3 text-sm font-bold text-brand transition hover:bg-[#edf2ff] focus:outline-none focus:ring-2 focus:ring-brand/20"
+                onClick={() => setIsResettingPassword(true)}
+                type="button"
+              >
+                Reset password
+              </button>
+            )}
 
             <Field label="Current level">
               <select

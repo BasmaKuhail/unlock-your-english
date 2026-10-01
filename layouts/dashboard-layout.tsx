@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { AdminHeader } from "@/components/admin/layout/admin-header";
 import { AdminSidebar } from "@/components/admin/layout/admin-sidebar";
 import { MobileAdminNavigation } from "@/components/admin/layout/mobile-admin-navigation";
+import type { AdminProfile } from "@/lib/auth/admin-session";
 import type { AdminView } from "@/lib/admin/types";
 
 type DashboardLayoutProps = {
@@ -12,15 +13,16 @@ type DashboardLayoutProps = {
   view: AdminView;
   onViewChange: (view: AdminView) => void;
   toast?: string | null;
+  adminProfile: AdminProfile;
 };
 
-export function DashboardLayout({ children, view, onViewChange, toast }: DashboardLayoutProps) {
+export function DashboardLayout({ children, view, onViewChange, toast, adminProfile }: DashboardLayoutProps) {
   return (
     <div className="min-h-dvh overflow-x-clip bg-[#f7f8fc] text-ink">
-      <AdminSidebar onViewChange={onViewChange} view={view} />
+      <AdminSidebar adminProfile={adminProfile} onViewChange={onViewChange} view={view} />
 
       <div className="lg:pl-[252px]">
-        <AdminHeader view={view} />
+        <AdminHeader adminProfile={adminProfile} view={view} />
         <main className="mx-auto max-w-[1440px] px-4 py-6 pb-28 sm:px-6 sm:py-8 sm:pb-28 lg:px-10 lg:py-10">
           {children}
         </main>

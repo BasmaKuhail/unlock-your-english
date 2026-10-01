@@ -1,6 +1,6 @@
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
 import { redirect } from "next/navigation";
-import { getAdminSession } from "@/lib/auth/admin-session";
+import { getAdminProfile, getAdminSession } from "@/lib/auth/admin-session";
 
 export const metadata = {
   title: "Admin dashboard | Uye",
@@ -14,5 +14,7 @@ export default async function AdminPage() {
     redirect("/admin/login");
   }
 
-  return <AdminDashboard />;
+  const adminProfile = await getAdminProfile(admin);
+
+  return <AdminDashboard adminProfile={adminProfile} />;
 }
