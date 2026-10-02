@@ -131,7 +131,7 @@ export function StudentsView({
           </table>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-[#edf0f5] px-4 py-4 text-xs font-medium text-ink/45 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        {/* <div className="flex flex-col gap-3 border-t border-[#edf0f5] px-4 py-4 text-xs font-medium text-ink/45 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <span>Showing {filteredStudents.length} students</span>
 
           <div className="flex gap-1">
@@ -156,7 +156,7 @@ export function StudentsView({
               Next
             </button>
           </div>
-        </div>
+        </div> */}
       </section>
     </div>
   );
