@@ -20,7 +20,9 @@ export function SiteHeader() {
         ))}
       </nav>
 
-      <Button href="/login">Log in</Button>
+      <Button href={homeContent.headerAction.href}>
+        {homeContent.headerAction.label}
+      </Button>
     </header>
   );
 }

@@ -32,7 +32,7 @@ export function LessonPreview({ lesson }: LessonPreviewProps) {
 
         <div className="mt-7 rounded-2xl bg-white p-4 shadow-[0_12px_26px_rgba(1,14,54,0.06)] sm:p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand">
-            Useful phrase
+            This week’s focus
           </p>
           <p className="mt-3 text-xl font-semibold tracking-[-0.035em] text-ink sm:text-2xl">
             “{lesson.prompt}”
@@ -45,8 +45,8 @@ export function LessonPreview({ lesson }: LessonPreviewProps) {
 
         <div className="mt-6 flex items-center justify-between rounded-2xl bg-ink p-4 text-white">
           <div>
-            <p className="text-xs text-white/55">Daily progress</p>
-            <p className="mt-1 text-sm font-semibold">You’re on a 4-day streak</p>
+            <p className="text-xs text-white/55">{lesson.progressLabel}</p>
+            <p className="mt-1 text-sm font-semibold">{lesson.progressText}</p>
           </div>
           <span aria-hidden="true" className="animate-gentle-pulse text-lg">
             🔥

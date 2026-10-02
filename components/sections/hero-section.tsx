@@ -44,21 +44,10 @@ export function HeroSection() {
           </div>
 
           <div className="animate-hero-enter mt-10 flex items-center gap-3 [animation-delay:370ms]">
-            <div aria-hidden="true" className="flex -space-x-2">
-              {[
-                "bg-[#ffceb6] text-[#a34118]",
-                "bg-[#c7dcff] text-[#31589e]",
-                "bg-[#d9d3ff] text-[#58459f]",
-              ].map((color, index) => (
-                <span
-                  className={`flex h-8 w-8 items-center justify-center rounded-full border-2 border-white text-[10px] font-bold ${color}`}
-                  key={color}
-                >
-                  {String.fromCharCode(65 + index)}
-                </span>
-              ))}
-            </div>
-            <p className="text-sm font-medium text-ink/60">{hero.socialProof}</p>
+            <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/[0.1] text-brand">
+              <CheckIcon className="h-4 w-4" />
+            </span>
+            <p className="max-w-sm text-sm font-medium leading-6 text-ink/60">{hero.supportingLine}</p>
           </div>
         </div>
 

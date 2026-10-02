@@ -33,7 +33,7 @@ export function LoginShell({ children }: AuthShellProps) {
             <div className="absolute inset-x-0 bottom-0 h-full rounded-[1.5rem] " />
             <Image
               alt="The Uye rabbit reading a book"
-              className="relative z-10 w-[20rem] max-w-none object-contain"
+              className="relative z-10 w-[23rem] max-w-none object-contain"
               priority
               src={rabbitReading}
             />
