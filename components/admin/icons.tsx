@@ -45,3 +45,11 @@ export function UploadIcon({ className, ...props }: IconProps) {
 export function CloseIcon({ className, ...props }: IconProps) {
   return <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 24 24" {...props}><path d="m6 6 12 12m0-12L6 18" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" /></svg>;
 }
+
+export function EyeIcon({ className, ...props }: IconProps) {
+  return <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 24 24" {...props}><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /><circle cx="12" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.8" /></svg>;
+}
+
+export function EyeOffIcon({ className, ...props }: IconProps) {
+  return <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 24 24" {...props}><path d="M10.7 6.1A10.8 10.8 0 0 1 12 6c6 0 9.5 6 9.5 6a17.3 17.3 0 0 1-3.1 3.6M13.3 17.9A10.8 10.8 0 0 1 12 18c-6 0-9.5-6-9.5-6a17.3 17.3 0 0 1 3.1-3.6M9.5 9.5a3.5 3.5 0 0 0 5 5M3 3l18 18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" /></svg>;
+}

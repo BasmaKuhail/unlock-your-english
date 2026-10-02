@@ -1,6 +1,9 @@
 import { useCallback, useState, type FormEvent } from "react";
 
-import { signInWithLearnerId } from "@/lib/auth/learner-auth";
+import {
+  signInWithLearnerId,
+} from "@/lib/auth/learner-auth";
+import { LearnerSessionPersistenceError } from "@/lib/auth/learner-session";
 
 import { useRouter } from "next/navigation";
 
@@ -34,12 +37,15 @@ export function useLoginForm() {
       setNotice("Correct!");
       router.replace("/")
     } catch (error) {
-      console.error(error);
-      setNotice("Invalid learner ID or password.");
+      setNotice(
+        error instanceof LearnerSessionPersistenceError
+          ? "We couldn’t save your login on this browser. Enable browser storage and try again."
+          : "Invalid learner ID or password.",
+      );
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData]);
+  }, [formData, router]);
 
   return { formData, isSubmitting, notice, submit, updateField };
 }

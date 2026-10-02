@@ -15,7 +15,7 @@ export function LoginShell({ children }: AuthShellProps) {
   return (
     <div className="flex min-h-dvh flex-col bg-canvas px-4 py-4 sm:px-6 sm:py-6">
       <header className="mx-auto flex w-full max-w-5xl items-center justify-between">
-        <Logo label="uye." />
+        <Logo label="UYE" />
       </header>
 
       <main className="mx-auto my-auto grid w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-line bg-white shadow-[0_20px_55px_rgba(1,14,54,0.09)] lg:min-h-[32rem] lg:grid-cols-[0.82fr_1.18fr]">

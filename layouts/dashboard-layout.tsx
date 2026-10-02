@@ -10,14 +10,13 @@ import type { AdminView } from "@/lib/admin/types";
 type DashboardLayoutProps = {
   children: ReactNode;
   view: AdminView;
-  onViewChange: (view: AdminView) => void;
   toast?: string | null;
 };
 
-export function DashboardLayout({ children, view, onViewChange, toast }: DashboardLayoutProps) {
+export function DashboardLayout({ children, view, toast }: DashboardLayoutProps) {
   return (
     <div className="min-h-dvh overflow-x-clip bg-[#f7f8fc] text-ink">
-      <AdminSidebar onViewChange={onViewChange} view={view} />
+      <AdminSidebar view={view} />
 
       <div className="lg:pl-[252px]">
         <AdminHeader view={view} />
@@ -26,7 +25,7 @@ export function DashboardLayout({ children, view, onViewChange, toast }: Dashboa
         </main>
       </div>
 
-      <MobileAdminNavigation onViewChange={onViewChange} view={view} />
+      <MobileAdminNavigation view={view} />
 
       {toast && (
         <div

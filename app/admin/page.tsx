@@ -1,4 +1,4 @@
-import { AdminDashboard } from "@/components/admin/admin-dashboard";
+import { AdminRoute } from "@/components/admin/admin-route";
 
 export const metadata = {
   title: "Admin dashboard | Uye",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function AdminPage() {
-  return <AdminDashboard />;
+  return <AdminRoute view="dashboard" />;
 }
