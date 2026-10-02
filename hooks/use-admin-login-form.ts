@@ -41,9 +41,7 @@ export function useAdminLoginForm() {
         formData.password,
       );
 
-      const tokenResult = await getIdTokenResult(userCredential.user);
-      console.log(tokenResult);
-      
+      const tokenResult = await getIdTokenResult(userCredential.user);      
 
       if (tokenResult.claims.admin !== true) {
         await signOut(auth);

@@ -15,7 +15,14 @@ export async function POST(request: Request) {
       );
     }
 
+    console.log("Admin session: token received");
+
     const decodedToken = await adminAuth.verifyIdToken(idToken);
+
+    console.log("Admin session: token verified", {
+      uid: decodedToken.uid,
+      isAdmin: decodedToken.admin === true,
+    });
 
     if (decodedToken.admin !== true) {
       return NextResponse.json(
@@ -28,6 +35,8 @@ export async function POST(request: Request) {
       expiresIn: SESSION_DURATION,
     });
 
+    console.log("Admin session: session cookie created");
+
     const response = NextResponse.json({ success: true });
 
     response.cookies.set("uye_admin_session", sessionCookie, {
@@ -39,10 +48,12 @@ export async function POST(request: Request) {
     });
 
     return response;
-  } catch {
+  } catch (error) {
+    console.error("Failed to create admin session:", error);
+
     return NextResponse.json(
       { error: "Unable to create admin session." },
-      { status: 401 },
+      { status: 500 },
     );
   }
 }
