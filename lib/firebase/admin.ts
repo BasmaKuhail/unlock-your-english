@@ -14,19 +14,6 @@ const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY
 if (!projectId || !clientEmail || !privateKey) {
   throw new Error("Missing Firebase Admin environment variables.");
 }
-console.log({
-  projectId,
-  clientEmail,
-  privateKeyLength: privateKey?.length,
-  startsCorrectly: privateKey?.startsWith(
-    "-----BEGIN PRIVATE KEY-----",
-  ),
-  endsCorrectly: privateKey
-    ?.trim()
-    .endsWith("-----END PRIVATE KEY-----"),
-  containsRealNewlines: privateKey?.includes("\n"),
-  containsEscapedNewlines: privateKey?.includes("\\n"),
-});
 
 const adminApp =
   getApps().length === 0
