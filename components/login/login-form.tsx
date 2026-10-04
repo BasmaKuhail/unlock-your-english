@@ -2,7 +2,8 @@
 
 import { useLoginForm } from "@/hooks/use-login-form";
 import { loginContent } from "@/lib/auth/login-content";
-
+import Image from "next/image";
+import peeking from "@/public/peeking.png"
 type FieldProps = {
   id: string;
   label: string;
@@ -44,6 +45,8 @@ export function LoginForm() {
         <p className="mt-2 text-sm leading-6 text-ink/60">{loginContent.description}</p>
       </div>
 
+    <div className="flex flex-col gap-0">
+      <Image src={peeking} alt="bunny" width={100} height={100} className="md:hiddin" />
       <form className="mt-6 space-y-4" onSubmit={submit}>
         <Field 
           autoComplete="username" 
@@ -79,7 +82,7 @@ export function LoginForm() {
           {loginContent.submitLabel}
         </button>
       </form>
-
+</div>
       <p aria-live="polite" className="mt-3 min-h-5 text-center text-sm text-ink/60">
         {notice}
       </p>
