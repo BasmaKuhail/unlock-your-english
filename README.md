@@ -1,53 +1,203 @@
-# Uye
+# Unlock Your English — UYE
 
-A polished Next.js starter for an English-learning website. It uses TypeScript, Tailwind CSS v4, and a small component architecture that is ready for the final copy and imagery.
+A production-focused English learning platform built for **Unlock Your English (UYE)**, a free educational initiative that helps learners develop their English through structured levels, lessons, activities, and guided progression.
 
-## Getting started
+The platform provides separate experiences for learners and administrators, with Firebase powering authentication and persistent application data.
 
-```bash
-npm run dev
-```
+## Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000).
+- **Next.js 16**
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS**
+- **Firebase Authentication**
+- **Cloud Firestore**
+- **Firebase Admin SDK**
+- **Vercel**
 
-## Project structure
+## Core Features
+
+### Learner Experience
+
+Learners access the platform using accounts created and managed by UYE administrators.
+
+The learner system includes:
+
+- Secure learner authentication
+- Persistent learner sessions
+- Level-based access
+- Controlled progression between levels
+- Account status management
+- Learning material organised by level
+- Responsive learner interface
+
+Learner accounts use generated credentials rather than public self-registration.
+
+### Admin Dashboard
+
+The administration area provides a dedicated interface for managing the UYE platform.
+
+Current functionality includes:
+
+- Secure administrator authentication
+- Protected admin routes
+- Student management
+- Student search and filtering
+- Active/frozen account states
+- Level access control
+- Student profile editing
+- Admin profile management
+- Admin credential updates
+- Dashboard statistics
+- Responsive administration UI
+
+Additional content and level-management functionality is being integrated with Firestore.
+
+## Authentication Architecture
+
+UYE intentionally separates learner authentication from administrator authorization.
+
+### Admin Authentication
+
+Administrator login uses Firebase Authentication on the client and Firebase Admin on the Next.js server.
 
 ```text
-app/                  # App Router routes, global styles, and metadata
-  (auth)/login/       # Login route group (URL remains /login)
-  admin/              # Admin route
-components/
-  admin/              # Admin UI grouped by dashboard, students, and levels
-  login/              # Login UI components
-  layout/             # Shared site-level composition
-  sections/           # Marketing-page sections composed from UI primitives
-    hero/              # Hero-only composition pieces
-  ui/                 # Reusable, presentational building blocks
-hooks/                # Reusable React state and event logic
-lib/                  # Data, types, external services, and shared utilities
-  admin/              # Dashboard content, mock data, and types
-  auth/               # Login content and authentication service
-  firebase/           # Firebase client configuration
-content/              # Shared marketing-page copy and navigation data
-public/               # Static images and brand assets
+Admin enters credentials
+        ↓
+Firebase Authentication
+        ↓
+Firebase ID token
+        ↓
+POST /api/auth/admin-session
+        ↓
+Next.js server
+        ↓
+Firebase Admin verifies token
+        ↓
+Verify admin custom claim
+        ↓
+Create secure HttpOnly session cookie
+        ↓
+Protected admin routes
 ```
 
-## Updating the hero
+An account must contain the Firebase custom claim:
 
-All current placeholder copy lives in `content/home.ts`. Replace the strings there when the final text arrives. The hero is intentionally split into a section shell (`components/sections/hero-section.tsx`) and its lesson-card presentation (`components/sections/hero/lesson-preview.tsx`); this keeps page data and UI composition independent. Admin and login logic are separated into `hooks/` and `lib/`, while their UI stays under `components/`. Add final hero imagery to `public/` and use it from the section with `next/image` when needed.
+```text
+admin: true
+```
 
-The existing small PNGs in `public/` are palette references. The initial theme tokens are based on them: navy `#010E36`, blue `#3D72FB`, light gray `#F4F4F4`, and white `#FFFFFF`.
+before an administrator session can be created.
 
-## Checks
+The resulting session cookie is:
+
+- `HttpOnly`
+- `Secure` in production
+- `SameSite=Lax`
+- unavailable to client-side JavaScript
+
+This prevents access to the admin dashboard based solely on client-side authentication state.
+
+### Learner Authentication
+
+Learners authenticate separately through Firebase Authentication.
+
+Learner sessions are persisted for a controlled period and automatically expire according to the application's learner-session policy.
+
+Admin authentication is handled independently through the server-side session cookie.
+
+## Security
+
+The project follows several important security boundaries:
+
+- Firebase Admin runs only on the server.
+- Service-account credentials are never exposed to browser code.
+- Admin authorization is verified server-side.
+- Admin status is not trusted from client state.
+- Admin sessions use HttpOnly cookies.
+- Firebase custom claims determine administrator privileges.
+- Protected admin endpoints validate the administrator session.
+- Learner and administrator authentication flows remain separate.
+- Sensitive credentials are stored using environment variables.
+- Production credentials are excluded from Git.
+
+## Project Structure
+
+The application broadly follows this structure:
+
+```text
+app/
+├── admin/
+├── api/
+│   ├── admin/
+│   └── auth/
+└── ...
+
+components/
+├── admin/
+├── admin-auth/
+└── ...
+
+context/
+└── admin-context.tsx
+
+hooks/
+├── use-admin-dashboard.ts
+└── use-admin-login-form.ts
+
+layouts/
+└── dashboard-layout.tsx
+
+lib/
+├── admin/
+├── auth/
+└── firebase/
+    ├── admin.ts
+    └── client.ts
+```
+
+Server-only Firebase Admin functionality lives under:
+
+```text
+lib/firebase/admin.ts
+```
+
+while browser-side Firebase functionality is kept separately in:
+
+```text
+lib/firebase/client.ts
+```
+
+This separation is intentional and should be preserved.
+
+## Production Checks
+
+Before a production release:
 
 ```bash
-npm run lint
 npm run build
 ```
 
-## First commit
+The project should also be validated with automated tests covering important authentication, authorization, Firestore security, and learner/admin workflows.
 
-```bash
-git add .
-git commit -m "chore: initialize Uye landing page"
-```
+Planned production testing includes automated Firebase Security Rules tests before the platform is considered production-ready.
+
+## Roadmap
+
+Current development is focused on:
+
+- Firestore-backed level management
+- Learning content management
+- Lesson organisation
+- Student progression
+- Admin content controls
+- Learner dashboard integration
+- Automated testing
+- Firebase Security Rules testing
+- Production hardening
+
+## About UYE
+
+**Unlock Your English (UYE)** is a free educational initiative designed to make structured English learning accessible through guided lessons, vocabulary, activities, quizzes, and level-based progression.
+
+The web platform extends the initiative by providing learners with a central place to access their learning journey while giving administrators the tools needed to manage students and educational content.
