@@ -10,33 +10,44 @@ export type AdminProfile = {
 export type StudentStatus = "Active" | "Frozen";
 export type StudentFilter = "All" | StudentStatus;
 
-export type Student = {
-  uid: string;
-  name: string;
-  email: string;
-  password: string;
-  level: string;
-  progress: number;
-  status: StudentStatus;
-  levelOpen: boolean;
-  initials: string;
-  tone: string;
+export type ResourceType = "text" | "file" | "voice";
+
+type BaseResource = {
+  id: string;
+  title: string;
 };
 
-export type ContentSection = {
-  id: number;
+export type TextResource = BaseResource & {
+  type: "text";
+  content: string;
+};
+
+export type UploadedResource = BaseResource & {
+  type: "file" | "voice";
+  fileName: string;
+  storagePath: string;
+  mimeType: string;
+};
+
+export type LevelResource = TextResource | UploadedResource;
+
+
+export type LevelSection = {
+  id: string;
   title: string;
-  document: string;
+  order: number;
+  isOpen: boolean;
+  resources: LevelResource[];
 };
 
 export type Level = {
-  id: number;
+  id: string;
   title: string;
   description: string;
-  students: number;
-  sections: ContentSection[];
+  isOpen: boolean;
+  order: number;
+  sections: LevelSection[];
 };
-
 export type AdminNavigationItem = {
   label: string;
   value: AdminView;

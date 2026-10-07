@@ -48,11 +48,24 @@ export function AdminDashboard({
       )}
 
       {view === "levels" && (
-        <LevelsView
-          levels={dashboard.levels}
-          onAdd={dashboard.addLevel}
-          onEdit={dashboard.setSelectedLevel}
-        />
+        dashboard.selectedLevel ? (
+          <LevelEditor
+            key={dashboard.selectedLevel.id}
+            level={dashboard.selectedLevel}
+            onAssignStudent={dashboard.assignStudentToLevel}
+            onBack={() => dashboard.setSelectedLevel(null)}
+            onRemoveStudent={dashboard.removeStudentFromLevel}
+            onSave={dashboard.saveLevel}
+            students={dashboard.students}
+          />
+        ) : (
+          <LevelsView
+            levels={dashboard.levels}
+            onAdd={dashboard.addLevel}
+            onEdit={dashboard.setSelectedLevel}
+            students={dashboard.students}
+          />
+        )
       )}
 
       {dashboard.isCreatingStudent && (
@@ -75,14 +88,6 @@ export function AdminDashboard({
         />
       )}
 
-      {dashboard.selectedLevel && (
-        <LevelEditor
-          key={dashboard.selectedLevel.id}
-          level={dashboard.selectedLevel}
-          onClose={() => dashboard.setSelectedLevel(null)}
-          onSave={dashboard.saveLevel}
-        />
-      )}
     </DashboardLayout>
   );
 }

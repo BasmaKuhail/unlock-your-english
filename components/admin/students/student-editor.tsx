@@ -29,7 +29,7 @@ type StudentEditorProps =
 export type CreateStudentFormData = {
   name: string;
   password: string;
-  level: string | null;
+  levelId: string | null;
   levelOpen: boolean;
 };
 
@@ -40,8 +40,8 @@ export function StudentEditor(props: StudentEditorProps) {
     isCreateMode ? "" : props.student.name,
   );
 
-  const [level, setLevel] = useState<string | null>(
-    isCreateMode ? null : props.student.level,
+  const [levelId, setLevelId] = useState<string | null>(
+    isCreateMode ? null : props.student.levelId,
   );
 
   const [levelOpen, setLevelOpen] = useState(
@@ -63,7 +63,7 @@ export function StudentEditor(props: StudentEditorProps) {
       props.onCreate({
         name: name.trim(),
         password,
-        level,
+        levelId,
         levelOpen,
       });
 
@@ -74,7 +74,8 @@ export function StudentEditor(props: StudentEditorProps) {
       {
         ...props.student,
         name: name.trim(),
-        level,
+        levelId,
+        level: props.levels.find((item) => item.id === levelId)?.title ?? null,
         levelOpen,
         status,
       },
@@ -206,14 +207,14 @@ export function StudentEditor(props: StudentEditorProps) {
               <select
                 className="input"
                 onChange={(event) =>
-                  setLevel(event.target.value || null)
+                  setLevelId(event.target.value || null)
                 }
-                value={level ?? ""}
+                value={levelId ?? ""}
               >
                 <option value="">Not assigned</option>
 
                 {props.levels.map((item) => (
-                  <option key={item.id} value={item.title}>
+                  <option key={item.id} value={item.id}>
                     {item.title}
                   </option>
                 ))}

@@ -3,6 +3,7 @@ export type Student = {
   studentId: string; // UYE-0001 — learner-facing ID
   name: string;
   level: string | null;
+  levelId: string | null;
   levelOpen: boolean;
   status: "Active" | "Frozen";
   progress: 0;

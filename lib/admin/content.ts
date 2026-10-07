@@ -62,5 +62,5 @@ export const levelCopy = {
   title: "Levels",
   addButton: "Add level",
   description:
-    "Build each learning path from clear, focused content sections. Every section has a title and supporting document for students.",
+    "Build learning paths with controlled sections and text, file, or voice documents for students.",
 } as const;

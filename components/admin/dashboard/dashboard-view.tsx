@@ -5,6 +5,7 @@ import { ArrowRightIcon, BookIcon, GridIcon, UsersIcon } from "@/components/admi
 import { PageHeading } from "@/components/admin/ui/page-heading";
 import { StatusPill } from "@/components/admin/ui/status-pill";
 import { activityChart, adminPaths, dashboardCopy, levelProgress } from "@/lib/admin/content";
+import { getLevelStudents } from "@/lib/admin/levels";
 import type { Level } from "@/lib/admin/types";
 import type { Student } from "@/types/student";
 import { cn } from "@/lib/cn";
@@ -70,7 +71,7 @@ export function DashboardView({ adminName, students, activeStudents, averageProg
               <div key={level.id}>
                 <div className="mb-1.5 flex items-center justify-between gap-3 text-xs">
                   <span className="truncate font-bold">{level.title}</span>
-                  <span className="shrink-0 text-ink/45">{level.students} students</span>
+                  <span className="shrink-0 text-ink/45">{getLevelStudents(students, level).length} students</span>
                 </div>
                 <div className="h-2 overflow-hidden rounded-full bg-[#eef0f5]">
                   <div className="h-full rounded-full bg-brand" style={{ width: `${levelProgress[index] ?? 45}%` }} />
