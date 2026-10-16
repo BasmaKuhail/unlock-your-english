@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { CreateStudentFormData } from "@/components/admin/students/student-editor";
-import { createLevel, NEW_LEVEL_ID } from "@/lib/admin/levels";
+import { saveSuccessNotification, type AdminAlert, type AlertVariant } from "@/lib/admin/alerts";
+import { NEW_LEVEL_ID } from "@/lib/admin/levels";
 import { getStudentInitials, getStudentTone } from "@/lib/admin/student-presentation";
 import type { Level, LevelSection, StudentFilter } from "@/lib/admin/types";
 import type { Student } from "@/types/student";
@@ -25,16 +26,27 @@ export function useAdminDashboard() {
   const [studentFilter, setStudentFilter] = useState<StudentFilter>("All");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
-  const [toast, setToast] = useState("");
+  const [alert, setAlert] = useState<AdminAlert | null>(null);
   const [isCreatingStudent, setIsCreatingStudent] = useState(false);
-  const toastTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const alertTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const notify = useCallback((message: string) => {
-    setToast(message);
+  const notify = useCallback((message: string, variant: AlertVariant = "success", title?: string) => {
+    const nextAlert: AdminAlert = {
+      id: crypto.randomUUID(),
+      message,
+      title: title ?? (variant === "success" ? "Saved" : "Something needs attention"),
+      variant,
+    };
 
-    if (toastTimeout.current) clearTimeout(toastTimeout.current);
+    setAlert(nextAlert);
 
-    toastTimeout.current = setTimeout(() => setToast(""), 2400);
+    if (variant === "success") {
+      saveSuccessNotification({ message, title: nextAlert.title });
+    }
+
+    if (alertTimeout.current) clearTimeout(alertTimeout.current);
+
+    alertTimeout.current = setTimeout(() => setAlert(null), variant === "success" ? 3200 : 4800);
   }, []);
 
   useEffect(() => {
@@ -47,7 +59,7 @@ export function useAdminDashboard() {
         setStudents(data.students.map(withPresentation));
       } catch (error) {
         console.error("Failed to load students:", error);
-        notify("Unable to load students.");
+        notify("Unable to load students.", "error", "Students not loaded");
       } finally {
         setIsLoadingStudents(false);
       }
@@ -66,7 +78,7 @@ export function useAdminDashboard() {
         setLevels(data.levels);
       } catch (error) {
         console.error("Failed to load levels:", error);
-        notify("Unable to load levels.");
+        notify("Unable to load levels.", "error", "Levels not loaded");
       } finally {
         setIsLoadingLevels(false);
       }
@@ -76,7 +88,7 @@ export function useAdminDashboard() {
   }, [notify]);
 
   useEffect(() => () => {
-    if (toastTimeout.current) clearTimeout(toastTimeout.current);
+    if (alertTimeout.current) clearTimeout(alertTimeout.current);
   }, []);
 
   const filteredStudents = useMemo(() => {
@@ -125,7 +137,7 @@ export function useAdminDashboard() {
     } catch (error) {
       console.error("Failed to update student:", error);
       const message = error instanceof Error ? error.message : "Unable to update student.";
-      notify(message);
+      notify(message, "error", "Student not saved");
     }
   }, [notify]);
 
@@ -149,7 +161,7 @@ export function useAdminDashboard() {
       notify(`${student.name}'s level access was ${updatedStudent.levelOpen ? "opened" : "closed"}.`);
     } catch (error) {
       console.error("Failed to update level access:", error);
-      notify(error instanceof Error ? error.message : "Unable to update level access.");
+      notify(error instanceof Error ? error.message : "Unable to update level access.", "error", "Access not updated");
     }
   }, [notify, students]);
 
@@ -174,7 +186,7 @@ export function useAdminDashboard() {
       notify(`${createdStudent.name} was created with ID ${createdStudent.studentId}.`);
     } catch (error) {
       console.error("Failed to create student:", error);
-      notify(error instanceof Error ? error.message : "Unable to create student.");
+      notify(error instanceof Error ? error.message : "Unable to create student.", "error", "Student not created");
     }
   }, [notify]);
 
@@ -443,7 +455,7 @@ const saveLevel = useCallback(
     const data = await response.json();
     if (!response.ok) {
       const message = data.error ?? "Unable to update student level.";
-      notify(message);
+      notify(message, "error", "Student level not updated");
       throw new Error(message);
     }
 
@@ -480,7 +492,7 @@ const saveLevel = useCallback(
     setStudentFilter,
     studentFilter,
     students,
-    toast,
+    alert,
     toggleStudentAccess,
   };
 }

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { signOut } from "firebase/auth";
 
 import { auth } from "@/lib/firebase/client";
+import { clearAdminNotifications } from "@/lib/admin/alerts";
 
 export function AdminLogoutButton() {
   const router = useRouter();
@@ -25,6 +26,7 @@ export function AdminLogoutButton() {
         throw new Error("Unable to clear admin session.");
       }
 
+      clearAdminNotifications();
       await signOut(auth);
       router.replace("/admin/login");
       router.refresh();

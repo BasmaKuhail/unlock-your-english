@@ -4,6 +4,7 @@ import {
 } from "firebase/auth";
 
 import { auth } from "@/lib/firebase/client";
+import { clearAdminNotifications } from "@/lib/admin/alerts";
 
 type SignInAsAdminInput = {
   email: string;
@@ -27,6 +28,7 @@ export async function signOutAdmin() {
       method: "DELETE",
     });
   } finally {
+    clearAdminNotifications();
     await signOut(auth);
   }
 }

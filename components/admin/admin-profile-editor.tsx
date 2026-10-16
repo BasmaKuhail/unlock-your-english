@@ -12,6 +12,7 @@ import {
   EyeOffIcon,
 } from "@/components/admin/icons";
 import { Field } from "@/components/admin/ui/field";
+import { Alert } from "@/components/admin/ui/alert";
 import {
   type AdminProfile,
   useAdmin,
@@ -211,14 +212,7 @@ export function AdminProfileEditor({
               </p>
             </Field>
 
-            {error && (
-              <p
-                className="rounded-xl bg-[#fff3f1] px-4 py-3 text-sm font-medium text-[#bd3c34]"
-                role="alert"
-              >
-                {error}
-              </p>
-            )}
+            {error && <Alert title="Profile not updated" variant="error">{error}</Alert>}
           </div>
 
           <div className="flex flex-col-reverse gap-2 border-t border-[#e8eaf1] px-4 py-4 sm:flex-row sm:justify-end sm:gap-3 sm:px-6 sm:py-5">

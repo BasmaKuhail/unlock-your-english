@@ -21,7 +21,7 @@ export function AdminDashboard({
 
   return (
     <DashboardLayout
-      toast={dashboard.toast}
+      alert={dashboard.alert}
       view={view}
     >
       {view === "dashboard" && (

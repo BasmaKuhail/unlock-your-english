@@ -83,6 +83,7 @@ function normaliseSection(value: unknown): LevelSection | null {
   return {
     id: stringValue(value.id, 160) || createId("section"),
     title,
+    order: typeof value.order === "number" ? value.order : 0,
     isOpen: value.isOpen === true,
     resources,
   };

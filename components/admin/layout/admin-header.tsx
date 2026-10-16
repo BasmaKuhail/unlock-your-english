@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 
-import { BellIcon } from "@/components/admin/icons";
 import { AdminAvatar } from "@/components/admin/ui/admin-avatar";
+import { NotificationMenu } from "@/components/admin/ui/notification-menu";
 import { useAdmin } from "@/context/admin-context";
 import { adminPageLabels, adminPaths } from "@/lib/admin/content";
 import type { AdminView } from "@/lib/admin/types";
@@ -25,10 +25,7 @@ export function AdminHeader({ view }: { view: AdminView }) {
         </div>
 
         <div className="ml-auto flex items-center gap-3">
-          <button aria-label="Notifications" className="relative flex h-10 w-10 items-center justify-center rounded-full text-ink/55 transition hover:bg-[#f3f5fa]" type="button">
-            <BellIcon className="h-5 w-5" />
-            <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-brand" />
-          </button>
+          <NotificationMenu />
           <span className="hidden h-7 w-px bg-[#e8eaf1] sm:block" />
           <Link
             aria-label="View admin profile"
