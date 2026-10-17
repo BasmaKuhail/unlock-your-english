@@ -10,26 +10,51 @@ export type AdminProfile = {
 export type StudentStatus = "Active" | "Frozen";
 export type StudentFilter = "All" | StudentStatus;
 
-export type ResourceType = "text" | "file" | "voice";
 
-type BaseResource = {
+export type ResourceType =
+  | "text"
+  | "link"
+  | "file"
+  | "voice";
+
+type ResourceBase = {
   id: string;
   title: string;
+  order: number;
 };
 
-export type TextResource = BaseResource & {
+export type TextResource = ResourceBase & {
   type: "text";
   content: string;
 };
 
-export type UploadedResource = BaseResource & {
-  type: "file" | "voice";
+export type LinkResource = ResourceBase & {
+  type: "link";
+  url: string;
+};
+
+export type FileResource = ResourceBase & {
+  type: "file";
   fileName: string;
   storagePath: string;
   mimeType: string;
+  size: number;
 };
 
-export type LevelResource = TextResource | UploadedResource;
+export type VoiceResource = ResourceBase & {
+  type: "voice";
+  fileName: string;
+  storagePath: string;
+  mimeType: string;
+  size: number;
+};
+
+
+export type LevelResource =
+  | TextResource
+  | LinkResource
+  | FileResource
+  | VoiceResource;
 
 
 export type LevelSection = {

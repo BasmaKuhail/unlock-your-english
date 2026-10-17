@@ -22,7 +22,7 @@ export function AdminSidebar({ view }: { view: AdminView }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[252px] flex-col border-r border-[#e8eaf1] bg-white px-5 py-7 lg:flex">
       <div className="flex w-fit flex-col">
-        <Link className="px-3 text-[1.8rem] font-black tracking-[-0.09em] text-ink" href="/">uye.</Link>
+        <Link className="px-3 text-[1.8rem] font-black tracking-[-0.09em] text-ink" href="/">UYE.</Link>
         <p className="mt-1 px-3 text-xs font-medium text-ink/45">Administration</p>
         <nav aria-label="Admin navigation" className="mt-10 space-y-1">
           {adminNavigation.map((item) => {

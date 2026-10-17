@@ -1,8 +1,8 @@
 import { AdminRoute } from "@/components/admin/admin-route";
 
 export const metadata = {
-  title: "Admin profile | Uye",
-  description: "View your Uye administrator profile.",
+  title: "Admin profile | UYE",
+  description: "View your UYE administrator profile.",
 };
 
 export default function AdminProfileRoutePage() {

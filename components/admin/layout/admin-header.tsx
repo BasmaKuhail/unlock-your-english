@@ -16,10 +16,10 @@ export function AdminHeader({ view }: { view: AdminView }) {
   return (
     <header className="sticky top-0 z-20 border-b border-[#e8eaf1] bg-white/90 px-5 py-4 backdrop-blur lg:px-10">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-4">
-        <Link className="text-[1.65rem] font-black tracking-[-0.09em] text-ink lg:hidden" href="/">uye.</Link>
+        <Link className="text-[1.65rem] font-black tracking-[-0.09em] text-ink lg:hidden" href="/">UYE.</Link>
 
         <div className="hidden items-center gap-2 text-sm text-ink/45 lg:flex">
-          <span>Uye</span>
+          <span>UYE</span>
           <span>/</span>
           <span className="font-medium text-ink/75">{viewLabel}</span>
         </div>

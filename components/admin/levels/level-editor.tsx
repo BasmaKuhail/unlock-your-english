@@ -57,7 +57,10 @@ export function LevelEditor({
         .find((section) => section.id === sectionId)
         ?.resources.find((item) => item.id === resourceId);
 
-      if (!resource || resource.type === "text") {
+      if (
+        !resource ||
+        (resource.type !== "file" && resource.type !== "voice")
+      ) {
         throw new Error("Select a file or voice document first.");
       }
 
@@ -75,13 +78,20 @@ export function LevelEditor({
         sections: current.sections.map((section) => section.id !== sectionId ? section : {
           ...section,
           resources: section.resources.map((item) => {
-            if (item.id !== resourceId || item.type === "text") return item;
+            if (
+              item.id !== resourceId ||
+              (item.type !== "file" && item.type !== "voice")
+            ) {
+              return item;
+            }
+
             return {
               ...item,
               fileName: data.resource.fileName,
               storagePath: data.resource.storagePath,
               mimeType: data.resource.mimeType,
-            } as LevelResource;
+              size: data.resource.size,
+            };
           }),
         }),
       }));
@@ -95,8 +105,27 @@ export function LevelEditor({
   function validateDraft() {
     if (!draft.title.trim()) return "Add a title for this level.";
     if (draft.sections.some((section) => !section.title.trim())) return "Add a title for every section.";
-    if (draft.sections.flatMap((section) => section.resources).some((resource) => resource.type !== "text" && !resource.storagePath)) {
-      return "Upload or remove each file and voice document before saving.";
+    const resources = draft.sections.flatMap(
+      (section) => section.resources,
+    );
+
+    const hasMissingFiles = resources.some(
+      (resource) =>
+        (resource.type === "file" || resource.type === "voice") &&
+        !resource.storagePath,
+    );
+
+    const hasMissingLinks = resources.some(
+      (resource) =>
+        resource.type === "link" && !resource.url.trim(),
+    );
+
+    if (hasMissingFiles) {
+      return "Upload a file for every file or voice resource.";
+    }
+
+    if (hasMissingLinks) {
+      return "Add a URL for every link resource.";
     }
     return "";
   }

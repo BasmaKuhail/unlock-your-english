@@ -6,6 +6,7 @@ import { NEW_LEVEL_ID } from "@/lib/admin/levels";
 import { getStudentInitials, getStudentTone } from "@/lib/admin/student-presentation";
 import type { Level, LevelSection, StudentFilter } from "@/lib/admin/types";
 import type { Student } from "@/types/student";
+import { saveSectionResources } from "@/lib/admin/save-section-resources";
 
 type StudentApiRecord = Omit<Student, "initials" | "tone">;
 
@@ -255,7 +256,20 @@ const saveLevel = useCallback(
             );
           }
 
-          return sectionData.section;
+          const createdSection = sectionData.section as LevelSection;
+
+          const resources = await saveSectionResources(
+            createdLevel.id,
+            {
+              ...section,
+              id: createdSection.id,
+            },
+          );
+
+          return {
+            ...createdSection,
+            resources,
+          };
         }),
       );
 
@@ -349,7 +363,20 @@ const saveLevel = useCallback(
           );
         }
 
-        return data.section as LevelSection;
+        const createdSection = data.section as LevelSection;
+
+        const resources = await saveSectionResources(
+          level.id,
+          {
+            ...section,
+            id: createdSection.id,
+          },
+        );
+
+        return {
+          ...createdSection,
+          resources,
+        };
       }),
     );
 
@@ -396,7 +423,25 @@ const saveLevel = useCallback(
         }
       }),
     );
+    const updatedExistingSections = await Promise.all(
+      existingSections.map(async (section) => {
+        const originalSection =
+          originalLevel.sections.find(
+            (item) => item.id === section.id,
+          );
 
+        const resources = await saveSectionResources(
+          level.id,
+          section,
+          originalSection,
+        );
+
+        return {
+          ...section,
+          resources,
+        };
+      }),
+    );
     await Promise.all(
       removedSections.map(async (section) => {
         const response = await fetch(
@@ -419,7 +464,7 @@ const saveLevel = useCallback(
 
 
     const updatedSections = [
-      ...existingSections,
+      ...updatedExistingSections,
       ...createdSections,
     ].sort((a, b) => a.order - b.order);
 

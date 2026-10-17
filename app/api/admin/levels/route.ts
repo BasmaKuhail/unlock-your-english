@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { getAdminSession } from "@/lib/auth/admin-session";
 import { adminDb } from "@/lib/firebase/admin";
-import type { Level } from "@/lib/admin/types";
+import type { Level, LevelResource, LevelSection } from "@/lib/admin/types";
 
 export async function GET() {
   try {
@@ -28,24 +28,88 @@ export async function GET() {
           .orderBy("order", "asc")
           .get();
 
-        const sections = sectionsSnapshot.docs.map((sectionDocument) => ({
-          id: sectionDocument.id,
-          title: sectionDocument.get("title"),
-          order: sectionDocument.get("order"),
-          isOpen: sectionDocument.get("isOpen") ?? false,
-          resources: [],
-        }));
+        const sections: LevelSection[] = await Promise.all(
+  sectionsSnapshot.docs.map(async (sectionDoc) => {
+    const sectionData = sectionDoc.data();
 
-        return {
-          id: levelDocument.id,
-          title: levelDocument.get("title"),
-          description:
-            levelDocument.get("description") ?? null,
-          order: levelDocument.get("order"),
-          isOpen:
-            levelDocument.get("isOpen") ?? false,
-          sections,
+    const resourcesSnapshot = await sectionDoc.ref
+      .collection("resources")
+      .orderBy("order", "asc")
+      .get();
+
+    const resources: LevelResource[] = resourcesSnapshot.docs.map(
+      (resourceDoc) => {
+        const data = resourceDoc.data();
+
+        const base = {
+          id: resourceDoc.id,
+          title: data.title ?? "",
+          order: data.order ?? 0,
         };
+
+        switch (data.type) {
+          case "text":
+            return {
+              ...base,
+              type: "text",
+              content: data.content ?? "",
+            };
+
+          case "link":
+            return {
+              ...base,
+              type: "link",
+              url: data.url ?? "",
+            };
+
+          case "file":
+            return {
+              ...base,
+              type: "file",
+              fileName: data.fileName ?? "",
+              storagePath: data.storagePath ?? "",
+              mimeType: data.mimeType ?? "",
+              size: data.size ?? 0,
+            };
+
+          case "voice":
+            return {
+              ...base,
+              type: "voice",
+              fileName: data.fileName ?? "",
+              storagePath: data.storagePath ?? "",
+              mimeType: data.mimeType ?? "",
+              size: data.size ?? 0,
+            };
+
+          default:
+            throw new Error(
+              `Unsupported resource type: ${data.type}`,
+            );
+        }
+      },
+    );
+
+    return {
+      id: sectionDoc.id,
+      title: sectionData.title ?? "",
+      order: sectionData.order ?? 0,
+      isOpen: sectionData.isOpen === true,
+      resources,
+    };
+  }),
+);
+
+       const levelData = levelDocument.data();
+
+      return {
+        id: levelDocument.id,
+        title: levelData.title ?? "",
+        description: levelData.description ?? "",
+        order: levelData.order ?? 0,
+        isOpen: levelData.isOpen === true,
+        sections,
+      };
       }),
     );
 

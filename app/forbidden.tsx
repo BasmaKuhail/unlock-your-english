@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { ErrorScreen } from "@/components/error/error-screen";
 
 export const metadata: Metadata = {
-  title: "Access denied | Uye",
+  title: "Access denied | UYE",
   description: "You do not have permission to view this page.",
 };
 

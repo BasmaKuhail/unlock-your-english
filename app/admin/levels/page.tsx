@@ -1,8 +1,8 @@
 import { AdminRoute } from "@/components/admin/admin-route";
 
 export const metadata = {
-  title: "Levels | Uye admin",
-  description: "Manage Uye learning content.",
+  title: "Levels | UYE admin",
+  description: "Manage UYE learning content.",
 };
 
 export default function AdminLevelsPage() {

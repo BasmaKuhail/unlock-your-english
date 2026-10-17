@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { ErrorScreen } from "@/components/error/error-screen";
 
 export const metadata: Metadata = {
-  title: "Sign in required | Uye",
+  title: "Sign in required | UYE",
   description: "Sign in to continue to this page.",
 };
 

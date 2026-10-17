@@ -5,7 +5,7 @@ import { AdminLoginShell } from "@/components/admin-auth/admin-login-shell";
 
 export const metadata: Metadata = {
   title: "Admin sign in | UYE",
-  description: "Sign in to administer Uye learners and learning content.",
+  description: "Sign in to administer UYE learners and learning content.",
 };
 
 export default function AdminLoginPage() {
