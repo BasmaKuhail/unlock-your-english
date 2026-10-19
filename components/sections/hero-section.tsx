@@ -1,4 +1,5 @@
 import { LessonPreview } from "@/components/sections/hero/lesson-preview";
+import { HeroAccountAction } from "@/components/sections/hero/hero-account-action";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
 import { homeContent } from "@/content/home";
@@ -33,10 +34,7 @@ export function HeroSection() {
           </p>
 
           <div className="animate-hero-enter mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 [animation-delay:300ms]">
-            <Button href={hero.primaryAction.href}>
-              {hero.primaryAction.label}
-              <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </Button>
+            <HeroAccountAction />
             <Button href={hero.secondaryAction.href} variant="text">
               {hero.secondaryAction.label}
               <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

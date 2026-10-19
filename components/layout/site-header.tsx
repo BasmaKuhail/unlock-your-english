@@ -1,6 +1,6 @@
 import { homeContent } from "@/content/home";
 
-import { Button } from "@/components/ui/button";
+import { SiteAccount } from "@/components/layout/site-account";
 import { Logo } from "@/components/ui/logo";
 
 export function SiteHeader() {
@@ -20,9 +20,7 @@ export function SiteHeader() {
         ))}
       </nav>
 
-      <Button href={homeContent.headerAction.href}>
-        {homeContent.headerAction.label}
-      </Button>
+      <SiteAccount />
     </header>
   );
 }

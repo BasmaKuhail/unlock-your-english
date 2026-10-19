@@ -29,6 +29,8 @@ export function useAdminDashboard() {
   const [selectedLevel, setSelectedLevel] = useState<Level | null>(null);
   const [alert, setAlert] = useState<AdminAlert | null>(null);
   const [isCreatingStudent, setIsCreatingStudent] = useState(false);
+  const [deletingLevelId, setDeletingLevelId] = useState<string | null>(null);
+  const deletingLevel = useRef(false);
   const alertTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const notify = useCallback((message: string, variant: AlertVariant = "success", title?: string) => {
@@ -201,6 +203,29 @@ export function useAdminDashboard() {
       sections: [],
     });
   }, [levels.length]);
+
+  const deleteLevel = useCallback(async (level: Level) => {
+    if (deletingLevel.current) return;
+    if (!window.confirm(`Delete "${level.title}" and all its sections and documents? This cannot be undone. Students must be reassigned first.`)) return;
+
+    deletingLevel.current = true;
+    setDeletingLevelId(level.id);
+    try {
+      const response = await fetch(`/api/admin/levels/${encodeURIComponent(level.id)}`, { method: "DELETE" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "Unable to delete level.");
+
+      setLevels((current) => current.filter((item) => item.id !== level.id));
+      setSelectedLevel((current) => current?.id === level.id ? null : current);
+      notify(`${level.title} was deleted.`, "success", "Level deleted");
+    } catch (error) {
+      console.error("Failed to delete level:", error);
+      notify(error instanceof Error ? error.message : "Unable to delete level.", "error", "Level not deleted");
+    } finally {
+      deletingLevel.current = false;
+      setDeletingLevelId(null);
+    }
+  }, [notify]);
 
 const saveLevel = useCallback(
   async (
@@ -519,6 +544,8 @@ const saveLevel = useCallback(
     assignStudentToLevel,
     averageProgress,
     createStudent,
+    deleteLevel,
+    deletingLevelId,
     filteredStudents,
     isCreatingStudent,
     isLoadingLevels,

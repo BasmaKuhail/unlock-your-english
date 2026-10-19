@@ -10,6 +10,42 @@ type RouteContext = {
   }>;
 };
 
+export async function DELETE(_request: Request, context: RouteContext) {
+  try {
+    const adminSession = await getAdminSession();
+    if (!adminSession) {
+      return NextResponse.json({ error: "Administrator access required." }, { status: 401 });
+    }
+
+    const { levelId } = await context.params;
+    const levelRef = adminDb.collection("levels").doc(levelId);
+    const levelSnapshot = await levelRef.get();
+    if (!levelSnapshot.exists) {
+      return NextResponse.json({ error: "Level not found." }, { status: 404 });
+    }
+
+    const students = await adminDb.collection("users").where("role", "==", "student").get();
+    const hasStudents = students.docs.some((student) =>
+      student.get("currentLevelId") === levelId ||
+      (!student.get("currentLevelId") && student.get("currentLevel") === levelSnapshot.get("title")),
+    );
+    if (hasStudents) {
+      return NextResponse.json(
+        { error: "Reassign or remove all students from this level before deleting it." },
+        { status: 409 },
+      );
+    }
+
+    // Firestore does not automatically remove sections or their resources.
+    // Uploaded files follow the existing separate B2 cleanup process.
+    await adminDb.recursiveDelete(levelRef);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Failed to delete level:", error);
+    return NextResponse.json({ error: "Unable to delete level." }, { status: 500 });
+  }
+}
+
 export async function PATCH(
   request: Request,
   context: RouteContext,

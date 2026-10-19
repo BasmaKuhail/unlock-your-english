@@ -60,8 +60,10 @@ export function AdminDashboard({
           />
         ) : (
           <LevelsView
+            deletingLevelId={dashboard.deletingLevelId}
             levels={dashboard.levels}
             onAdd={dashboard.addLevel}
+            onDelete={dashboard.deleteLevel}
             onEdit={dashboard.setSelectedLevel}
             students={dashboard.students}
           />

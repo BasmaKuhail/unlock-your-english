@@ -5,7 +5,7 @@ import { getLevelStudents } from "@/lib/admin/levels";
 import type { Level } from "@/lib/admin/types";
 import type { Student } from "@/types/student";
 
-export function LevelsView({ levels, students, onEdit, onAdd }: { levels: Level[]; students: Student[]; onEdit: (level: Level) => void; onAdd: () => void }) {
+export function LevelsView({ levels, students, onEdit, onAdd, onDelete, deletingLevelId }: { levels: Level[]; students: Student[]; onEdit: (level: Level) => void; onAdd: () => void; onDelete: (level: Level) => Promise<void>; deletingLevelId: string | null }) {
   return (
     <div className="space-y-6 sm:space-y-7">
       <PageHeading eyebrow={levelCopy.eyebrow} title={levelCopy.title}>
@@ -17,7 +17,7 @@ export function LevelsView({ levels, students, onEdit, onAdd }: { levels: Level[
       <p className="-mt-3 max-w-xl text-sm leading-6 text-ink/55 sm:-mt-4">{levelCopy.description}</p>
       <section className="grid gap-4 sm:gap-5 md:grid-cols-2 2xl:grid-cols-3">
         {levels.map((level) => (
-          <LevelCard key={level.id} level={level} onEdit={onEdit} studentCount={getLevelStudents(students, level).length} />
+          <LevelCard key={level.id} level={level} onEdit={onEdit} onDelete={onDelete} deletingLevelId={deletingLevelId} studentCount={getLevelStudents(students, level).length} />
         ))}
         {levels.length === 0 && (
           <div className="col-span-full rounded-2xl border border-dashed border-[#cfd7e7] bg-white px-6 py-14 text-center">
@@ -30,7 +30,7 @@ export function LevelsView({ levels, students, onEdit, onAdd }: { levels: Level[
   );
 }
 
-function LevelCard({ level, onEdit, studentCount }: { level: Level; onEdit: (level: Level) => void; studentCount: number }) {
+function LevelCard({ level, onEdit, onDelete, deletingLevelId, studentCount }: { level: Level; onEdit: (level: Level) => void; onDelete: (level: Level) => Promise<void>; deletingLevelId: string | null; studentCount: number }) {
   const documentCount = level.sections.reduce(
     (total, section) => total + section.resources.length,
     0,
@@ -54,6 +54,9 @@ function LevelCard({ level, onEdit, studentCount }: { level: Level; onEdit: (lev
             </div>
             <button className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-brand transition group-hover:text-brand-dark" onClick={() => onEdit(level)} type="button">
               Manage content <ArrowRightIcon className="h-4 w-4" />
+            </button>
+            <button aria-label={`Delete ${level.title}`} className="mt-5 ml-4 inline-flex items-center rounded-lg px-2 py-1 text-sm font-bold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50" disabled={deletingLevelId !== null} onClick={() => void onDelete(level)} type="button">
+              {deletingLevelId === level.id ? "Deleting…" : "Delete level"}
             </button>
     </article>
   );
