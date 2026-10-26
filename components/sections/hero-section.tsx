@@ -1,10 +1,13 @@
+"use client";
+
 import { LessonPreview } from "@/components/sections/hero/lesson-preview";
 import { HeroAccountAction } from "@/components/sections/hero/hero-account-action";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
-import { homeContent } from "@/content/home";
+import { useHomeLanguage } from "@/context/home-language-context";
 
 export function HeroSection() {
+  const { content: homeContent, isArabic } = useHomeLanguage();
   const { hero } = homeContent;
 
   return (
@@ -54,7 +57,7 @@ export function HeroSection() {
             aria-hidden="true"
             className="animate-drift absolute -right-2 -top-6 hidden rounded-2xl bg-ink px-4 py-3 text-xs font-semibold text-white shadow-xl sm:block"
           >
-            One step closer
+            {isArabic ? "خطوة أقرب" : "One step closer"}
             <span className="ml-2 text-[#9fbbff]">✦</span>
           </div>
 
@@ -67,7 +70,7 @@ export function HeroSection() {
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#e5eeff] text-brand">
               <CheckIcon className="h-3.5 w-3.5" />
             </span>
-            <span className="text-xs font-semibold text-ink">Lesson complete!</span>
+            <span className="text-xs font-semibold text-ink">{isArabic ? "?خطوة أقرب?!" : "Lesson complete!"}</span>
           </div>
         </div>
       </div>

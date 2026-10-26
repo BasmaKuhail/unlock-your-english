@@ -1,10 +1,13 @@
+"use client";
+
 import Image from "next/image";
 
-import { homeContent } from "@/content/home";
+import { useHomeLanguage } from "@/context/home-language-context";
 
 import { SectionEyebrow } from "./section-eyebrow";
 
 export function AboutSection() {
+  const { content: homeContent } = useHomeLanguage();
   const { about } = homeContent;
 
   return (
