@@ -1,11 +1,14 @@
+"use client";
+
 import Image from "next/image";
 
 import { CheckIcon } from "@/components/ui/icons";
-import { homeContent } from "@/content/home";
+import { useHomeLanguage } from "@/context/home-language-context";
 
 import { SectionEyebrow } from "./section-eyebrow";
 
 export function HowItWorksSection() {
+  const { content: homeContent, isArabic } = useHomeLanguage();
   const { howItWorks } = homeContent;
 
   return (
@@ -28,24 +31,24 @@ export function HowItWorksSection() {
 
             <div className="relative z-10 inline-flex items-center gap-3 rounded-2xl border border-white/80 bg-white/70 px-3.5 py-3 shadow-[0_12px_28px_rgba(1,14,54,0.06)] backdrop-blur-sm">
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand text-xs font-bold text-white">
-                5m
+                {isArabic ? "٥ د" : "5m"}
               </span>
               <span>
-                <span className="block text-[0.68rem] font-bold uppercase tracking-[0.13em] text-brand">Your pace</span>
-                <span className="mt-0.5 block text-sm font-semibold text-ink">One useful lesson</span>
+                <span className="block text-[0.68rem] font-bold uppercase tracking-[0.13em] text-brand">{isArabic ? "حسب وتيرتك" : "Your pace"}</span>
+                <span className="mt-0.5 block text-sm font-semibold text-ink">{isArabic ? "درس مفيد واحد" : "One useful lesson"}</span>
               </span>
             </div>
 
             <div className="relative z-10 mt-8 max-w-[13.5rem] rounded-2xl bg-white/70 p-4 shadow-[0_10px_24px_rgba(1,14,54,0.04)] backdrop-blur-sm sm:p-5">
               <p className="text-2xl font-semibold leading-tight tracking-[-0.045em] text-ink sm:text-3xl">
-                Small steps make space for big confidence.
+                {isArabic ? "خطوات صغيرة تبني ثقة كبيرة." : "Small steps make space for big confidence."}
               </p>
             </div>
 
             <Image
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute -bottom-20 -right-7 h-[29rem] w-auto object-contain sm:-bottom-24 sm:right-0 sm:h-[34rem]"
+              className="pointer-events-none absolute -bottom-20 -right-7 h-[29rem] w-auto object-contain sm:-bottom-24 sm:right-0 sm:h-[34rem] rtl:-left-7 rtl:right-auto rtl:sm:left-0"
               height={1024}
               src="/wonder.png"
               width={1024}
@@ -63,7 +66,7 @@ export function HowItWorksSection() {
                     </span>
                     <div className="py-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-brand/70">Step</span>
+                        <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-brand/70">{isArabic ? "الخطوة" : "Step"}</span>
                         <span className="flex h-4 w-4 items-center justify-center rounded-full bg-brand text-white">
                           <CheckIcon className="h-2.5 w-2.5" />
                         </span>

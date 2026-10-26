@@ -1,11 +1,14 @@
+"use client";
+
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@/components/ui/icons";
 import { Logo } from "@/components/ui/logo";
-import { homeContent } from "@/content/home";
+import { useHomeLanguage } from "@/context/home-language-context";
 
 export function ClosingSection() {
+  const { content: homeContent } = useHomeLanguage();
   const { closing, footer } = homeContent;
 
   return (
@@ -32,7 +35,7 @@ export function ClosingSection() {
             <Image
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute -bottom-28 -right-6 hidden h-[29rem] w-auto object-contain lg:block"
+              className="pointer-events-none absolute -bottom-28 -right-6 hidden h-[29rem] w-auto object-contain lg:block rtl:-left-6 rtl:right-auto"
               height={1024}
               src="/wonder.png"
               width={1024}

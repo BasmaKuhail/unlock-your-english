@@ -1,11 +1,14 @@
+"use client";
+
 import { CheckIcon } from "@/components/ui/icons";
-import { homeContent } from "@/content/home";
+import { useHomeLanguage } from "@/context/home-language-context";
 
 type LessonPreviewProps = {
-  lesson: (typeof homeContent.hero)["lesson"];
+  lesson: { label: string; title: string; progress: string; prompt: string; response: string; progressLabel: string; progressText: string };
 };
 
 export function LessonPreview({ lesson }: LessonPreviewProps) {
+  const { isArabic } = useHomeLanguage();
   return (
     <div className="rounded-[2rem] border border-line bg-white p-3 shadow-[0_30px_80px_rgba(1,14,54,0.13)] sm:p-4">
       <div className="overflow-hidden rounded-[1.45rem] bg-surface p-5 sm:p-7">
@@ -21,7 +24,7 @@ export function LessonPreview({ lesson }: LessonPreviewProps) {
           </span>
         </div>
 
-        <div className="mt-6 flex gap-1.5" aria-label="Lesson progress">
+        <div className="mt-6 flex gap-1.5" aria-label={isArabic ? "تقدّم الدرس" : "Lesson progress"}>
           {[true, true, true, false, false].map((complete, index) => (
             <span
               className={`h-1.5 flex-1 rounded-full ${complete ? "bg-brand" : "bg-ink/10"}`}
@@ -32,7 +35,7 @@ export function LessonPreview({ lesson }: LessonPreviewProps) {
 
         <div className="mt-7 rounded-2xl bg-white p-4 shadow-[0_12px_26px_rgba(1,14,54,0.06)] sm:p-5">
           <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand">
-            This week’s focus
+            {isArabic ? "تركيز هذا الأسبوع" : "This week’s focus"}
           </p>
           <p className="mt-3 text-xl font-semibold tracking-[-0.035em] text-ink sm:text-2xl">
             “{lesson.prompt}”

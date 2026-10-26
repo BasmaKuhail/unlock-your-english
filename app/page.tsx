@@ -1,3 +1,4 @@
+import { HomeLanguageProvider } from "@/context/home-language-context";
 import { HeroSection } from "@/components/sections/hero-section";
 import { HomeAccountProvider } from "@/context/home-account-context";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -12,6 +13,7 @@ import { WhyUyeSection } from "@/components/sections/landing/why-uye-section";
 
 export default function Home() {
   return (
+    <HomeLanguageProvider>
     <HomeAccountProvider>
       <div className="min-h-dvh overflow-x-clip bg-canvas">
         <SiteHeader />
@@ -28,5 +30,6 @@ export default function Home() {
         </main>
       </div>
     </HomeAccountProvider>
+    </HomeLanguageProvider>
   );
 }

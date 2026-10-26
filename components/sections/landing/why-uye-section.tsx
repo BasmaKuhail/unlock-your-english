@@ -1,9 +1,12 @@
+"use client";
+
 import { CheckIcon } from "@/components/ui/icons";
-import { homeContent } from "@/content/home";
+import { useHomeLanguage } from "@/context/home-language-context";
 
 import { SectionEyebrow } from "./section-eyebrow";
 
 export function WhyUyeSection() {
+  const { content: homeContent } = useHomeLanguage();
   const { why } = homeContent;
 
   return (
