@@ -1,6 +1,7 @@
 
 import { DocumentIcon, ImageIcon, UploadIcon } from "@/components/admin/icons";
 import type { LevelResource, ResourceType } from "@/lib/admin/types";
+import { ResourceImagePreview } from "./resource-image-preview";
 
 type LevelResourceEditorProps = {
   index: number;
@@ -9,6 +10,8 @@ type LevelResourceEditorProps = {
   onRemove: () => void;
   onUpload: (file: File) => void;
   resource: LevelResource;
+  levelId: string;
+  sectionId: string
 };
 
 const resourceTypes: { value: ResourceType; label: string }[] = [
@@ -65,6 +68,8 @@ export function LevelResourceEditor({
   onRemove,
   onUpload,
   resource,
+  levelId,
+  sectionId,
 }: LevelResourceEditorProps) {
   const isFile =
     resource.type === "file" || resource.type === "voice" || resource.type === "image";
@@ -183,7 +188,7 @@ export function LevelResourceEditor({
 
       {isFile && (
         <div className="mt-3 rounded-xl border border-dashed border-[#cfd7e7] bg-white p-3">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 items-start sm:flex-row sm:items-center sm:justify-between">
             <div className="flex min-w-0 items-center gap-3">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#eaf0ff] text-brand">
                 {resource.type === "voice" ? (
@@ -242,6 +247,16 @@ export function LevelResourceEditor({
                 type="file"
               />
             </label>
+            {resource.type === "image" &&
+              resource.storagePath &&
+              !isUploading && (
+                <ResourceImagePreview
+                  levelId={levelId}
+                  sectionId={sectionId}
+                  resourceId={resource.id}
+                  storagePath={resource.storagePath}
+                />
+              )}
           </div>
         </div>
       )}

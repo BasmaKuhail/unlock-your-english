@@ -211,6 +211,7 @@ export function LevelEditor({
                 onUpload={(resourceId, file) => uploadResource(section.id, resourceId, file)}
                 section={section}
                 uploadingResourceId={uploadingResourceId}
+                levelId={draft.id}
               />
             ))}
           </div>

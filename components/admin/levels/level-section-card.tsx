@@ -5,6 +5,7 @@ import { createTextResource, createUploadedResource } from "@/lib/admin/levels";
 import type { LevelResource, LevelSection } from "@/lib/admin/types";
 
 type LevelSectionCardProps = {
+  levelId: string;
   index: number;
   onChange: (section: LevelSection) => void;
   onRemove: () => void;
@@ -20,6 +21,7 @@ export function LevelSectionCard({
   onUpload,
   section,
   uploadingResourceId,
+  levelId
 }: LevelSectionCardProps) {
   function updateResource(resourceId: string, resource: LevelResource) {
     onChange({
@@ -98,6 +100,8 @@ export function LevelSectionCard({
             onRemove={() => removeResource(resource.id)}
             onUpload={(file) => onUpload(resource.id, file)}
             resource={resource}
+            levelId={levelId}
+            sectionId={section.id}
           />
         ))}
       </div>
