@@ -2,16 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon } from "@/components/ui/icons";
-import { homeContent } from "@/content/home";
+import { useHomeLanguage } from "@/context/home-language-context";
 import { useHomeAccount } from "@/context/home-account-context";
 
 export function HeroAccountAction() {
+  const { content: homeContent, isArabic } = useHomeLanguage();
   const { account, isLoading } = useHomeAccount();
 
   if (isLoading || account?.role === "Learner") return null;
 
   const action = account?.role === "Admin"
-    ? { href: "/admin", label: "Go to dashboard" }
+    ? { href: "/admin", label: isArabic ? "انتقل إلى لوحة التحكم" : "Go to dashboard" }
     : homeContent.hero.primaryAction;
 
   return (

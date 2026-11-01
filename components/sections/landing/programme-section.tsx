@@ -1,11 +1,13 @@
+"use client";
+
 import Image from "next/image";
 
 import { CheckIcon } from "@/components/ui/icons";
-import { homeContent } from "@/content/home";
+import { useHomeLanguage } from "@/context/home-language-context";
 
 import { SectionEyebrow } from "./section-eyebrow";
 
-type Skill = (typeof homeContent.programme.skills)[number];
+type Skill = { number: string; title: string; description: string };
 
 const arcPositions = [
   "left-[1%] top-[15rem]",
@@ -17,6 +19,7 @@ const arcPositions = [
 ] as const;
 
 export function ProgrammeSection() {
+  const { content: homeContent } = useHomeLanguage();
   const { programme } = homeContent;
 
   return (

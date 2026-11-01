@@ -1,8 +1,11 @@
-import { homeContent } from "@/content/home";
+"use client";
+
+import { useHomeLanguage } from "@/context/home-language-context";
 
 import { SectionEyebrow } from "./section-eyebrow";
 
 export function TeamSection() {
+  const { content: homeContent } = useHomeLanguage();
   const { team } = homeContent;
 
   return (
