@@ -59,7 +59,7 @@ export function LevelEditor({
 
       if (
         !resource ||
-        (resource.type !== "file" && resource.type !== "voice")
+        (resource.type !== "file" && resource.type !== "voice" && resource.type !== "image")
       ) {
         throw new Error("Select a file or voice document first.");
       }
@@ -80,7 +80,7 @@ export function LevelEditor({
           resources: section.resources.map((item) => {
             if (
               item.id !== resourceId ||
-              (item.type !== "file" && item.type !== "voice")
+              !["file", "voice", "image"].includes(item.type)
             ) {
               return item;
             }
@@ -111,7 +111,7 @@ export function LevelEditor({
 
     const hasMissingFiles = resources.some(
       (resource) =>
-        (resource.type === "file" || resource.type === "voice") &&
+        (resource.type === "file" || resource.type === "voice" || resource.type === "image") &&
         !resource.storagePath,
     );
 
@@ -121,7 +121,7 @@ export function LevelEditor({
     );
 
     if (hasMissingFiles) {
-      return "Upload a file for every file or voice resource.";
+      return "Upload a file for every file, voice, or image resource.";
     }
 
     if (hasMissingLinks) {

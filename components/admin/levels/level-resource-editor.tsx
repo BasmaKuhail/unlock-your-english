@@ -1,5 +1,5 @@
 
-import { DocumentIcon, UploadIcon } from "@/components/admin/icons";
+import { DocumentIcon, ImageIcon, UploadIcon } from "@/components/admin/icons";
 import type { LevelResource, ResourceType } from "@/lib/admin/types";
 
 type LevelResourceEditorProps = {
@@ -16,6 +16,7 @@ const resourceTypes: { value: ResourceType; label: string }[] = [
   { value: "link", label: "Link" },
   { value: "file", label: "File / PDF" },
   { value: "voice", label: "Voice" },
+  { value: "image", label: "Image" },
 ];
 
 function changeResourceType(
@@ -45,6 +46,7 @@ function changeResourceType(
 
     case "file":
     case "voice":
+    case "image":
       return {
         ...base,
         type,
@@ -65,7 +67,7 @@ export function LevelResourceEditor({
   resource,
 }: LevelResourceEditorProps) {
   const isFile =
-    resource.type === "file" || resource.type === "voice";
+    resource.type === "file" || resource.type === "voice" || resource.type === "image";
 
   return (
     <div className="rounded-xl border border-[#e8ebf1] bg-[#fbfcff] p-3 sm:p-4">
@@ -186,8 +188,10 @@ export function LevelResourceEditor({
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#eaf0ff] text-brand">
                 {resource.type === "voice" ? (
                   <UploadIcon className="h-4 w-4" />
-                ) : (
+                ) : resource.type === "file" ? (
                   <DocumentIcon className="h-4 w-4" />
+                ) : (
+                  <ImageIcon className="h-4 w-4" />
                 )}
               </span>
 
@@ -200,7 +204,9 @@ export function LevelResourceEditor({
                 <p className="mt-0.5 text-xs text-ink/47">
                   {resource.type === "voice"
                     ? "Upload an audio recording (up to 20 MB)."
-                    : "Upload a PDF or supporting file (up to 20 MB)."}
+                    : resource.type === "file"
+                    ? "Upload a PDF or supporting file (up to 20 MB)."
+                    : "Upload an image (up to 10 MB)."}
                 </p>
               </div>
             </div>
@@ -215,8 +221,12 @@ export function LevelResourceEditor({
               <input
                 accept={
                   resource.type === "voice"
-                    ? "audio/*"
-                    : ".pdf,.doc,.docx,application/pdf"
+                    ? ".wav,.mp3,.aif,.aiff,.cda,.au,.flac,.m4a,.ape,.wv,.tta"
+                    : resource.type === "file"
+                    ? ".pdf,.doc,.docx,application/pdf"
+                    : resource.type === "image"
+                    ? ".jpg,.jpeg,.png,.webp,.gif"
+                    : undefined
                 }
                 className="sr-only"
                 disabled={isUploading}

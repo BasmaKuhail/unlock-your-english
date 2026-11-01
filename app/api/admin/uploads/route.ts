@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
     if (
       !(file instanceof File) ||
-      (resourceType !== "file" && resourceType !== "voice")
+      (resourceType !== "file" && resourceType !== "voice" && resourceType !== "image")
     ) {
       return NextResponse.json(
         { error: "Choose a valid file." },
@@ -66,6 +66,44 @@ export async function POST(request: Request) {
       );
     }
 
+    // validate image files
+    const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+    const MAX_OTHER_SIZE = 20 * 1024 * 1024;
+
+    const maxSize =
+      resourceType === "image"
+        ? MAX_IMAGE_SIZE
+        : MAX_OTHER_SIZE;
+
+    if (file.size === 0 || file.size > maxSize) {
+      return NextResponse.json(
+        {
+          error:
+            resourceType === "image"
+              ? "Images must be smaller than 10 MB."
+              : "Files must be smaller than 20 MB.",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (resourceType === "image") {
+      const allowedTypes = new Set([
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif",
+      ]);
+
+      if (!allowedTypes.has(file.type)) {
+        return NextResponse.json(
+          {
+            error: "Only JPG, PNG, WebP and GIF images are supported.",
+          },
+          { status: 400 },
+        );
+      }
+    }
     // 5. Generate unique object key
     const storagePath =
       `level-resources/${resourceType}/${safeFileName(file.name)}`;

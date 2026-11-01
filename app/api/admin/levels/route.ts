@@ -81,6 +81,15 @@ export async function GET() {
               mimeType: data.mimeType ?? "",
               size: data.size ?? 0,
             };
+          case "image":
+            return {
+              ...base,
+              type: "image",
+              fileName: data.fileName ?? "",
+              storagePath: data.storagePath ?? "",
+              mimeType: data.mimeType ?? "",
+              size: data.size ?? 0,
+            };
 
           default:
             throw new Error(
