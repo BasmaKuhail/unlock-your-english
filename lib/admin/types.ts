@@ -15,7 +15,8 @@ export type ResourceType =
   | "text"
   | "link"
   | "file"
-  | "voice";
+  | "voice"
+  | "image";
 
 type ResourceBase = {
   id: string;
@@ -49,12 +50,19 @@ export type VoiceResource = ResourceBase & {
   size: number;
 };
 
-
+export type ImageResource = ResourceBase & {
+  type: "image";
+  fileName: string;
+  storagePath: string;
+  mimeType: string;
+  size: number;
+};
 export type LevelResource =
   | TextResource
   | LinkResource
   | FileResource
-  | VoiceResource;
+  | VoiceResource
+  | ImageResource;
 
 
 export type LevelSection = {

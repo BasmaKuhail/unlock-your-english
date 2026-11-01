@@ -37,7 +37,7 @@ export function LevelSectionCard({
     });
   }
 
-  function addResource(type: "text" | "file" | "voice") {
+  function addResource(type: "text" | "file" | "voice" | "image") {
     const resource = type === "text" ? createTextResource() : createUploadedResource(type);
     onChange({ ...section, resources: [...section.resources, resource] });
   }
@@ -111,6 +111,9 @@ export function LevelSectionCard({
         </button>
         <button className="inline-flex items-center gap-1.5 rounded-full border border-[#dfe5f2] px-3 py-2 text-xs font-bold text-ink/60 hover:bg-[#f6f8fc]" onClick={() => addResource("voice")} type="button">
           <PlusIcon className="h-3.5 w-3.5" /> Voice file
+        </button>
+        <button className="inline-flex items-center gap-1.5 rounded-full border border-[#dfe5f2] px-3 py-2 text-xs font-bold text-ink/60 hover:bg-[#f6f8fc]" onClick={() => addResource("image")} type="button">
+          <PlusIcon className="h-3.5 w-3.5" /> Image
         </button>
       </div>
     </article>

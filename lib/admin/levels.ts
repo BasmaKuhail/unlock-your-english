@@ -1,4 +1,3 @@
-
 import type {
   Level,
   LevelResource,
@@ -38,7 +37,7 @@ export function createLinkResource(
 }
 
 export function createUploadedResource(
-  type: Extract<ResourceType, "file" | "voice">,
+  type: Extract<ResourceType, "file" | "voice" | "image">,
   order = 0,
 ): LevelResource {
   return {
@@ -46,6 +45,8 @@ export function createUploadedResource(
     title:
       type === "voice"
         ? "Voice document"
+        : type === "image"
+        ? "Image"
         : "File document",
     type,
     fileName: "",

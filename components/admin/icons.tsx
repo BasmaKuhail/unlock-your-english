@@ -38,6 +38,9 @@ export function DocumentIcon({ className, ...props }: IconProps) {
   return <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 24 24" {...props}><path d="M6.5 3.5h7l4 4v13h-11a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.7" /><path d="M13.5 3.8v4h3.7M8 12h8m-8 3.5h6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.7" /></svg>;
 }
 
+export function ImageIcon({className, ...props}: IconProps) {
+  return <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 24 24" {...props}><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" /><path d="M21.5 15.5l-4.5-6-3.5 4.5-3.5-4.5-4.5 6h16Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" /></svg>;
+}
 export function UploadIcon({ className, ...props }: IconProps) {
   return <svg aria-hidden="true" className={className} fill="none" viewBox="0 0 24 24" {...props}><path d="M12 15V4m-4 4 4-4 4 4M5 14.5v4A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" /></svg>;
 }

@@ -139,7 +139,7 @@ export async function PATCH(
         type: "link",
         url,
       };
-    } else if (type === "file" || type === "voice") {
+    } else if (type === "file" || type === "voice" || type === "image") {
       const fileName = getString(body.fileName, 255);
       const storagePath = getString(body.storagePath, 500);
 

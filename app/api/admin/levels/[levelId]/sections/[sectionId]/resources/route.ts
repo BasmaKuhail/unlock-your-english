@@ -127,7 +127,7 @@ export async function POST(
         url,
         order,
       };
-    } else if (type === "file" || type === "voice") {
+    } else if (type === "file" || type === "voice" || type === "image") {
       const storagePath = getString(body.storagePath, 500);
       const fileName = getString(body.fileName, 255);
 
