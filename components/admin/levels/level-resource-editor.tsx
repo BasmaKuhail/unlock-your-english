@@ -2,6 +2,7 @@
 import { DocumentIcon, ImageIcon, UploadIcon } from "@/components/admin/icons";
 import type { LevelResource, ResourceType } from "@/lib/admin/types";
 import { ResourceImagePreview } from "./resource-image-preview";
+import { useEffect, useState } from "react";
 
 type LevelResourceEditorProps = {
   index: number;
@@ -74,6 +75,15 @@ export function LevelResourceEditor({
   const isFile =
     resource.type === "file" || resource.type === "voice" || resource.type === "image";
 
+    const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+      return () => {
+        if (imagePreviewUrl) {
+          URL.revokeObjectURL(imagePreviewUrl);
+        }
+      };
+    }, [imagePreviewUrl]);
   return (
     <div className="rounded-xl border border-[#e8ebf1] bg-[#fbfcff] p-3 sm:p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
@@ -201,7 +211,7 @@ export function LevelResourceEditor({
               </span>
 
               <div className="min-w-0">
-                <p className="truncate text-sm font-bold">
+                <p className=" text-sm font-bold">
                   {resource.fileName ||
                     `No ${resource.type} selected`}
                 </p>
@@ -222,7 +232,7 @@ export function LevelResourceEditor({
                 : resource.fileName
                   ? "Replace"
                   : "Choose file"}
-
+          
               <input
                 accept={
                   resource.type === "voice"
@@ -238,25 +248,48 @@ export function LevelResourceEditor({
                 onChange={(event) => {
                   const file = event.target.files?.[0];
 
-                  if (file) {
-                    onUpload(file);
+                  if (!file) {
+                    return;
                   }
-
+                  if (resource.type === "image") {
+                    const previewUrl = URL.createObjectURL(file);
+                    setImagePreviewUrl(previewUrl);
+                  } else {
+                    setImagePreviewUrl(null);
+                  }
+                  onUpload(file);
                   event.currentTarget.value = "";
                 }}
                 type="file"
               />
             </label>
-            {resource.type === "image" &&
-              resource.storagePath &&
-              !isUploading && (
-                <ResourceImagePreview
-                  levelId={levelId}
-                  sectionId={sectionId}
-                  resourceId={resource.id}
-                  storagePath={resource.storagePath}
-                />
-              )}
+            {resource.type === "image" && (
+              <div className="mt-3  sm:w-full md:w-[50%]">
+                {imagePreviewUrl ? (
+                  <div className="overflow-hidden rounded-xl border border-[#e8ebf1] bg-white p-3">
+                    <p className="mb-2 text-xs font-semibold text-ink/50">
+                      {isUploading
+                        ? "Uploading replacement…"
+                        : "New image preview"}
+                    </p>
+
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imagePreviewUrl}
+                      alt="Selected replacement image"
+                      className="max-h-72 w-full rounded-lg object-contain"
+                    />
+                  </div>
+                ) : resource.storagePath ? (
+                  <ResourceImagePreview
+                    levelId={levelId}
+                    sectionId={sectionId}
+                    resourceId={resource.id}
+                    storagePath={resource.storagePath}
+                  />
+                ) : null}
+              </div>
+            )}
           </div>
         </div>
       )}
