@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 
 import { Logo } from "@/components/ui/logo";
-import bigbunny from "@/public/big-bunny.png";
+import bigbunny from "@/public/images/bunny/big-bunny.png";
 
 type AdminLoginShellProps = {
   children: ReactNode;

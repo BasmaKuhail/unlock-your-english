@@ -37,5 +37,5 @@ export function SiteAccount() {
     <Link href="/admin/profile" aria-label={isArabic ? `عرض ملف ${account.name}` : `View profile for ${account.name}`} className="flex items-center gap-3 rounded-full p-1 transition hover:bg-brand/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand">
       {profile}
     </Link>
-  ) : <div className="flex items-center gap-3" aria-label={isArabic ? `تم تسجيل الدخول باسم ${account.name}` : `Signed in as ${account.name}`}>{profile}</div>;
+  ) : <Link href="/dashboard" className="flex items-center gap-3 rounded-full p-1 transition hover:bg-brand/5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand" aria-label={isArabic ? `تم تسجيل الدخول باسم ${account.name}` : `Open dashboard for ${account.name}`}>{profile}</Link>;
 }
