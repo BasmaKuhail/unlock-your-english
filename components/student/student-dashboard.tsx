@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Logo } from "@/components/ui/logo";
 import { ArrowRightIcon } from "@/components/ui/icons";
@@ -13,10 +13,27 @@ export function StudentDashboard() {
   const dashboard = useStudentDashboard();
   const { data, loading, error, level, section, saving, notice } = dashboard;
   const [levelOpen, setLevelOpen] = useState(false);
+  const handledContinue = useRef(false);
   const currentLevel = data?.levels.find((item) => item.isCurrent);
   const completed = level?.sections.filter((item) => item.state === "completed").length ?? 0;
   const total = level?.sections.length ?? 0;
   const currentCompleted = currentLevel?.sections.filter((item) => item.state === "completed").length ?? 0;
+
+  useEffect(() => {
+    if (!data || handledContinue.current) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("continue") !== "1") return;
+    handledContinue.current = true;
+    url.searchParams.delete("continue");
+    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+    const current = data.levels.find((item) => item.isCurrent);
+    const next = current?.sections.find((item) => item.state === "available");
+    if (current && next) {
+      dashboard.selectLevel(current.id);
+      dashboard.selectSection(next.id);
+      setLevelOpen(true);
+    }
+  }, [data, dashboard]);
 
   function openLevel(id: string) {
     dashboard.selectLevel(id);

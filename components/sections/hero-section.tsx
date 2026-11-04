@@ -1,13 +1,16 @@
 "use client";
 
 import { LessonPreview } from "@/components/sections/hero/lesson-preview";
+import { LearnerContinueCard } from "@/components/sections/hero/learner-continue-card";
 import { HeroAccountAction } from "@/components/sections/hero/hero-account-action";
 import { Button } from "@/components/ui/button";
 import { ArrowRightIcon, CheckIcon } from "@/components/ui/icons";
 import { useHomeLanguage } from "@/context/home-language-context";
+import { useHomeAccount } from "@/context/home-account-context";
 
 export function HeroSection() {
   const { content: homeContent, isArabic } = useHomeLanguage();
+  const { account, isLoading } = useHomeAccount();
   const { hero } = homeContent;
 
   return (
@@ -53,17 +56,17 @@ export function HeroSection() {
         </div>
 
         <div className="animate-hero-enter relative mx-auto w-full max-w-[32rem] [animation-delay:220ms] lg:mx-0">
-          <div
+          {!isLoading && account?.role !== "Learner" && <div
             aria-hidden="true"
             className="animate-drift absolute -right-2 -top-6 hidden rounded-2xl bg-ink px-4 py-3 text-xs font-semibold text-white shadow-xl sm:block"
           >
             {isArabic ? "خطوة أقرب" : "One step closer"}
             <span className="ml-2 text-[#9fbbff]">✦</span>
-          </div>
+          </div>}
 
-          <LessonPreview lesson={hero.lesson} />
+          {isLoading ? <div aria-busy="true" className="min-h-[24rem] rounded-[2rem] border border-line bg-white/70" /> : account?.role === "Learner" ? <LearnerContinueCard /> : <LessonPreview lesson={hero.lesson} />}
 
-          <div
+          {!isLoading && account?.role !== "Learner" && <div
             aria-hidden="true"
             className="absolute -bottom-7 -left-4 flex items-center gap-3 rounded-2xl border border-white bg-white px-4 py-3 shadow-[0_18px_36px_rgba(1,14,54,0.12)] sm:-left-9"
           >
@@ -71,7 +74,7 @@ export function HeroSection() {
               <CheckIcon className="h-3.5 w-3.5" />
             </span>
             <span className="text-xs font-semibold text-ink">{isArabic ? "?خطوة أقرب?!" : "Lesson complete!"}</span>
-          </div>
+          </div>}
         </div>
       </div>
     </section>
