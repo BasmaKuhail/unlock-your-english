@@ -26,10 +26,10 @@ export function HeroSection() {
 
       <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(420px,0.86fr)] lg:gap-20">
         <div className="max-w-2xl">
-          <p className="animate-hero-enter inline-flex items-center gap-2 rounded-full border border-brand/10 bg-brand/[0.06] px-3.5 py-2 text-xs font-semibold tracking-[0.015em] text-brand [animation-delay:70ms]">
+          {/* <p className="animate-hero-enter inline-flex items-center gap-2 rounded-full border border-brand/10 bg-brand/[0.06] px-3.5 py-2 text-xs font-semibold tracking-[0.015em] text-brand [animation-delay:70ms]">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
             {hero.eyebrow}
-          </p>
+          </p> */}
 
           <h1 className="animate-hero-enter mt-6 max-w-xl text-5xl font-semibold tracking-[-0.065em] text-ink [animation-delay:140ms] sm:text-6xl sm:leading-[1.03] lg:text-7xl">
             {hero.title}
