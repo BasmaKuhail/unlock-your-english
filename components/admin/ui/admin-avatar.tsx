@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import adminAvatar from "@/public/adminProfile.png";
+import adminAvatar from "@/public/images/bunny/adminProfile.png";
 import { cn } from "@/lib/cn";
 
 export function AdminAvatar({ className }: { className?: string }) {

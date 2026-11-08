@@ -35,7 +35,7 @@ export function useLoginForm() {
     try {
       await signInWithLearnerId({ learnerId: formData.id, password: formData.password });
       setNotice("Correct!");
-      router.replace("/")
+      router.replace("/dashboard");
     } catch (error) {
       setNotice(
         error instanceof LearnerSessionPersistenceError

@@ -9,9 +9,11 @@ export function HeroAccountAction() {
   const { content: homeContent, isArabic } = useHomeLanguage();
   const { account, isLoading } = useHomeAccount();
 
-  if (isLoading || account?.role === "Learner") return null;
+  if (isLoading) return null;
 
-  const action = account?.role === "Admin"
+  const action = account?.role === "Learner"
+    ? { href: "/dashboard?continue=1", label: isArabic ? "تابع التعلّم" : "Continue learning" }
+    : account?.role === "Admin"
     ? { href: "/admin", label: isArabic ? "انتقل إلى لوحة التحكم" : "Go to dashboard" }
     : homeContent.hero.primaryAction;
 
