@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import bodyGuard from "@/public/body-gard.png";
+import bodyGuard from "@/public/images/bunny/body-gard.png";
 
 type ErrorScreenProps = {
   code: string;

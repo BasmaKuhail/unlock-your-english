@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { Logo } from "@/components/ui/logo";
 import { loginContent } from "@/lib/auth/login-content";
-import rabbitReading from "@/public/login.png";
+import rabbitReading from "@/public/images/bunny/login.png";
 
 type AuthShellProps = {
   children: ReactNode;

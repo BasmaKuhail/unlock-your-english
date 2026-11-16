@@ -118,9 +118,9 @@ export const homeContent = {
       "Yana Al-Jaidi",
       "Abdulrahman Ferwana",
       "Ahmad Abdullah",
-      "Lara Afifa",
-      "Layan Saeed",
-      "Sara Qwaider",
+      "Feras Abu-Barham",
+      "Ahmed Abu-Shbeaka",
+      "Mohammed Salha",
     ],
   },
   contact: {
