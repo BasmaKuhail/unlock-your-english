@@ -1,3 +1,4 @@
+
 import { FieldValue } from "firebase-admin/firestore";
 import { NextResponse } from "next/server";
 
@@ -68,16 +69,21 @@ export async function POST(
 
     const sectionsRef = levelRef.collection("sections");
 
-    const existingSections = await sectionsRef.get();
+    const lastSectionSnapshot = await sectionsRef
+      .orderBy("order", "desc")
+      .limit(1)
+      .get();
 
-    const order = existingSections.size;
+    const order = lastSectionSnapshot.empty
+      ? 0
+      : lastSectionSnapshot.docs[0].get("order") + 1;
 
     const sectionRef = sectionsRef.doc();
 
     await sectionRef.set({
       title,
-      order,
       isOpen,
+      order,
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     });

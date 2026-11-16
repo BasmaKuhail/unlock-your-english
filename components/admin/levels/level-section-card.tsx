@@ -40,9 +40,25 @@ export function LevelSectionCard({
   }
 
   function addResource(type: "text" | "file" | "voice" | "image") {
-    const resource = type === "text" ? createTextResource() : createUploadedResource(type);
-    onChange({ ...section, resources: [...section.resources, resource] });
-  }
+  const nextOrder =
+    Math.max(-1, ...section.resources.map((resource) => resource.order)) + 1;
+
+  const resource =
+    type === "text"
+      ? createTextResource()
+      : createUploadedResource(type);
+
+  onChange({
+    ...section,
+    resources: [
+      ...section.resources,
+      {
+        ...resource,
+        order: nextOrder,
+      },
+    ],
+  });
+}
 
   return (
     <article className="rounded-2xl border border-[#e1e5ed] bg-white p-4 shadow-[0_10px_25px_rgba(1,14,54,0.025)] sm:p-5">

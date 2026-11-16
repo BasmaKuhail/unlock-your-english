@@ -160,7 +160,7 @@ export async function DELETE(
      * we must NOT simply delete the section document. Firestore does
      * not automatically delete its subcollections.
      */
-    await sectionRef.delete();
+    await adminDb.recursiveDelete(sectionRef);
 
     return NextResponse.json({
       success: true,

@@ -22,6 +22,7 @@ export function AdminDashboard({
   return (
     <DashboardLayout
       alert={dashboard.alert}
+      editorBackground={view === "levels" && Boolean(dashboard.selectedLevel)}
       view={view}
     >
       {view === "dashboard" && (

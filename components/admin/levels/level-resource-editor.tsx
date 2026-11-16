@@ -218,10 +218,10 @@ export function LevelResourceEditor({
 
                 <p className="mt-0.5 text-xs text-ink/47">
                   {resource.type === "voice"
-                    ? "Upload an audio recording (up to 20 MB)."
+                    ? "Upload an audio recording."
                     : resource.type === "file"
-                    ? "Upload a PDF or supporting file (up to 20 MB)."
-                    : "Upload an image (up to 10 MB)."}
+                    ? "Upload a PDF or supporting file."
+                    : "Upload an image."}
                 </p>
               </div>
             </div>

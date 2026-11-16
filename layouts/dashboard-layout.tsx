@@ -13,11 +13,12 @@ type DashboardLayoutProps = {
   children: ReactNode;
   view: AdminView;
   alert?: AdminAlert | null;
+  editorBackground?: boolean;
 };
 
-export function DashboardLayout({ children, view, alert }: DashboardLayoutProps) {
+export function DashboardLayout({ children, view, alert, editorBackground = false }: DashboardLayoutProps) {
   return (
-    <div className="min-h-dvh overflow-x-clip bg-[#f7f8fc] text-ink">
+    <div className={`min-h-dvh overflow-x-clip text-ink ${editorBackground ? "bg-[#dce5fa]" : "bg-[#EAF0FF]"}`}>
       <AdminSidebar view={view} />
 
       <div className="lg:pl-[252px]">

@@ -8,8 +8,6 @@ import { b2, B2_BUCKET_NAME } from "@/lib/storage/b2";
 
 export const runtime = "nodejs";
 
-const MAX_FILE_SIZE = 20 * 1024 * 1024;
-
 function safeFileName(name: string) {
   const extension = name.includes(".")
     ? `.${name.split(".").pop()}`
@@ -48,9 +46,9 @@ export async function POST(request: Request) {
     }
 
     // 3. Validate size
-    if (file.size === 0 || file.size > MAX_FILE_SIZE) {
+    if (file.size === 0) {
       return NextResponse.json(
-        { error: "Files must be between 1 byte and 20 MB." },
+        { error: "Choose a file that is not empty." },
         { status: 400 },
       );
     }
@@ -62,27 +60,6 @@ export async function POST(request: Request) {
     ) {
       return NextResponse.json(
         { error: "Voice documents must be audio files." },
-        { status: 400 },
-      );
-    }
-
-    // validate image files
-    const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
-    const MAX_OTHER_SIZE = 20 * 1024 * 1024;
-
-    const maxSize =
-      resourceType === "image"
-        ? MAX_IMAGE_SIZE
-        : MAX_OTHER_SIZE;
-
-    if (file.size === 0 || file.size > maxSize) {
-      return NextResponse.json(
-        {
-          error:
-            resourceType === "image"
-              ? "Images must be smaller than 10 MB."
-              : "Files must be smaller than 20 MB.",
-        },
         { status: 400 },
       );
     }

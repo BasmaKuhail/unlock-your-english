@@ -189,11 +189,15 @@ export async function POST(request: Request) {
     //
     // This is intentionally simple for now because UYE has a small
     // number of admins creating levels infrequently.
-    const existingLevels = await adminDb
+    const lastLevelSnapshot = await adminDb
       .collection("levels")
+      .orderBy("order", "desc")
+      .limit(1)
       .get();
 
-    const order = existingLevels.size;
+    const order = lastLevelSnapshot.empty
+      ? 0
+      : lastLevelSnapshot.docs[0].get("order") + 1;
 
     // 5. Ask Firestore to generate the permanent level ID.
     const levelRef = adminDb

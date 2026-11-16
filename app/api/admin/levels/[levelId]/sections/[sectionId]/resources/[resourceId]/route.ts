@@ -204,18 +204,23 @@ export async function PATCH(
     }
 
     // Firestore merge retains order and createdAt.
+    const order = refs.resourceSnap.get("order") ?? 0;
+
+    const createdAt =
+      refs.resourceSnap.get("createdAt") ?? new Date();
+
     await refs.resourceRef.set({
-        ...resourceData,
-        order: refs.resourceSnap.get("order") ?? 0,
-        createdAt: refs.resourceSnap.get("createdAt") ?? new Date(),
-        updatedAt: new Date(),
+      ...resourceData,
+      order,
+      createdAt,
+      updatedAt: new Date(),
     });
 
     return NextResponse.json({
       resource: {
         id: refs.resourceRef.id,
-        ...refs.resourceSnap.data(),
         ...resourceData,
+        order,
       },
     });
   } catch (error) {

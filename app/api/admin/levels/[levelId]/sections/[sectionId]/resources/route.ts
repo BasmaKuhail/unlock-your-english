@@ -54,8 +54,22 @@ export async function POST(
       levelRef.get(),
       sectionRef.get(),
     ]);
+    
+    console.log("Resource parent check:", {
+      levelId,
+      sectionId,
+      levelExists: levelSnap.exists,
+      sectionExists: sectionSnap.exists,
+      sectionPath: sectionRef.path,
+    });
 
     if (!levelSnap.exists || !sectionSnap.exists) {
+      console.log("Resource parent check:", {
+          levelId,
+          sectionId,
+          levelExists: levelSnap.exists,
+          sectionExists: sectionSnap.exists,
+        });
       return NextResponse.json(
         { error: "Level or section not found." },
         { status: 404 },
@@ -83,8 +97,14 @@ export async function POST(
 
     const resourcesRef = sectionRef.collection("resources");
 
-    const existing = await resourcesRef.get();
-    const order = existing.size;
+    const lastResourceSnapshot = await resourcesRef
+      .orderBy("order", "desc")
+      .limit(1)
+      .get();
+
+    const order = lastResourceSnapshot.empty
+      ? 0
+      : lastResourceSnapshot.docs[0].get("order") + 1;
 
     let resourceData: Record<string, unknown>;
 
@@ -239,6 +259,12 @@ export async function GET(
     ]);
 
     if (!levelSnap.exists || !sectionSnap.exists) {
+      console.log("Resource parent check:", {
+        levelId,
+        sectionId,
+        levelExists: levelSnap.exists,
+        sectionExists: sectionSnap.exists,
+      });
       return NextResponse.json(
         { error: "Level or section not found." },
         { status: 404 },

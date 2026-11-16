@@ -256,48 +256,47 @@ const saveLevel = useCallback(
 
       const createdLevel: Level = data.level;
 
-      const createdSections = await Promise.all(
-        level.sections.map(async (section) => {
-          const sectionResponse = await fetch(
-            `/api/admin/levels/${createdLevel.id}/sections`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                title: section.title,
-                isOpen: section.isOpen,
-              }),
+      const createdSections: LevelSection[] = [];
+
+      for (const section of level.sections) {
+        const sectionResponse = await fetch(
+          `/api/admin/levels/${createdLevel.id}/sections`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+              title: section.title,
+              isOpen: section.isOpen,
+            }),
+          },
+        );
+
+        const sectionData = await sectionResponse.json();
+
+        if (!sectionResponse.ok) {
+          throw new Error(
+            sectionData.error ??
+              `Unable to create section "${section.title}".`,
           );
+        }
 
-          const sectionData = await sectionResponse.json();
+        const createdSection = sectionData.section as LevelSection;
 
-          if (!sectionResponse.ok) {
-            throw new Error(
-              sectionData.error ??
-                `Unable to create section "${section.title}".`,
-            );
-          }
+        const resources = await saveSectionResources(
+          createdLevel.id,
+          {
+            ...section,
+            id: createdSection.id,
+          },
+        );
 
-          const createdSection = sectionData.section as LevelSection;
-
-          const resources = await saveSectionResources(
-            createdLevel.id,
-            {
-              ...section,
-              id: createdSection.id,
-            },
-          );
-
-          return {
-            ...createdSection,
-            resources,
-          };
-        }),
-      );
-
+        createdSections.push({
+          ...createdSection,
+          resources,
+        });
+      }
       const completeLevel: Level = {
         ...createdLevel,
         sections: createdSections,
@@ -363,47 +362,47 @@ const saveLevel = useCallback(
           ),
       );
 
-    const createdSections = await Promise.all(
-      newSections.map(async (section) => {
-        const response = await fetch(
-          `/api/admin/levels/${level.id}/sections`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              title: section.title,
-              isOpen: section.isOpen,
-            }),
+    const createdSections: LevelSection[] = [];
+
+    for (const section of newSections) {
+      const response = await fetch(
+        `/api/admin/levels/${level.id}/sections`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            title: section.title,
+            isOpen: section.isOpen,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ??
+            `Unable to create section "${section.title}".`,
         );
+      }
 
-        const data = await response.json();
+      const createdSection = data.section as LevelSection;
 
-        if (!response.ok) {
-          throw new Error(
-            data.error ??
-              `Unable to create section "${section.title}".`,
-          );
-        }
+      const resources = await saveSectionResources(
+        level.id,
+        {
+          ...section,
+          id: createdSection.id,
+        },
+      );
 
-        const createdSection = data.section as LevelSection;
-
-        const resources = await saveSectionResources(
-          level.id,
-          {
-            ...section,
-            id: createdSection.id,
-          },
-        );
-
-        return {
-          ...createdSection,
-          resources,
-        };
-      }),
-    );
+      createdSections.push({
+        ...createdSection,
+        resources,
+      });
+    }
 
     await Promise.all(
       existingSections.map(async (section) => {

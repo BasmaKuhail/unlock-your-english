@@ -170,7 +170,22 @@ export function LevelEditor({
       setIsUpdatingStudents(false);
     }
   }
+  function addSection() {
+  setDraft((current) => {
+    const nextOrder =
+      Math.max(-1, ...current.sections.map((section) => section.order)) + 1;
 
+    const section: LevelSection = {
+      ...createSection(),
+      order: nextOrder,
+    };
+
+    return {
+      ...current,
+      sections: [...current.sections, section],
+    };
+  });
+}
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
@@ -196,15 +211,15 @@ export function LevelEditor({
               <h2 className="mt-1 text-lg font-bold tracking-[-0.035em]">Build the learning sequence</h2>
               <p className="mt-1 text-sm text-ink/50">Each section can be opened or closed and can hold text, files, and voice documents.</p>
             </div>
-            <button className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-4 py-2.5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(58,112,255,0.18)] transition hover:bg-brand-dark" onClick={() => setDraft((current) => ({ ...current, sections: [...current.sections, createSection()] }))} type="button">
+            <button className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-4 py-2.5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(58,112,255,0.18)] transition hover:bg-brand-dark" onClick={addSection} type="button">
               <PlusIcon className="h-4 w-4" /> Add section
             </button>
           </div>
 
           <div className="space-y-4">
-            {draft.sections.map((section, index) => (
+            {draft.sections.toReversed().map((section, index) => (
               <LevelSectionCard
-                index={index}
+                index={draft.sections.length - 1 - index}
                 key={section.id}
                 onChange={(nextSection) => updateSection(section.id, nextSection)}
                 onRemove={() => removeSection(section.id)}
@@ -217,7 +232,7 @@ export function LevelEditor({
           </div>
 
           {draft.sections.length === 0 && (
-            <button className="flex w-full flex-col items-center rounded-2xl border border-dashed border-[#cfd7e7] bg-[#fbfcff] px-5 py-10 text-center transition hover:border-brand/50 hover:bg-[#f8faff]" onClick={() => setDraft((current) => ({ ...current, sections: [createSection()] }))} type="button">
+            <button className="flex w-full flex-col items-center rounded-2xl border border-dashed border-[#cfd7e7] bg-[#fbfcff] px-5 py-10 text-center transition hover:border-brand/50 hover:bg-[#f8faff]" onClick={addSection} type="button">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#eaf0ff] text-brand"><PlusIcon className="h-5 w-5" /></span>
               <span className="mt-3 text-sm font-bold">Add the first content section</span>
               <span className="mt-1 text-xs text-ink/47">Give it a title, control access, then add its documents.</span>
