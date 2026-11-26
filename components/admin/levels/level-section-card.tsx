@@ -1,9 +1,11 @@
 import { PlusIcon } from "@/components/admin/icons";
 import { LevelResourceEditor } from "@/components/admin/levels/level-resource-editor";
 import { Toggle } from "@/components/admin/ui/toggle";
+import { CollapseToggle, useCollapsible } from "@/components/admin/ui/collapse-toggle";
 import { createTextResource, createUploadedResource } from "@/lib/admin/levels";
 import type { LevelResource, LevelSection } from "@/lib/admin/types";
-import { useId, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
+import { SortableList } from "@/components/admin/sortable/sortable-list";
 
 type LevelSectionCardProps = {
   levelId: string;
@@ -26,8 +28,7 @@ export function LevelSectionCard({
   levelId,
   dragHandle,
 }: LevelSectionCardProps) {
-  const [isExpanded, setIsExpanded] = useState(!section.title.trim());
-  const contentId = useId();
+  const { contentId, isExpanded, toggle } = useCollapsible(!section.title.trim());
 
   function updateResource(resourceId: string, resource: LevelResource) {
     onChange({
@@ -46,25 +47,33 @@ export function LevelSectionCard({
   }
 
   function addResource(type: "text" | "file" | "voice" | "image") {
-  const nextOrder =
-    Math.max(-1, ...section.resources.map((resource) => resource.order)) + 1;
+    const nextOrder =
+      Math.max(-1, ...section.resources.map((resource) => resource.order)) + 1;
 
-  const resource =
-    type === "text"
-      ? createTextResource()
-      : createUploadedResource(type);
+    const resource =
+      type === "text"
+        ? createTextResource()
+        : createUploadedResource(type);
 
-  onChange({
-    ...section,
-    resources: [
-      ...section.resources,
-      {
-        ...resource,
-        order: nextOrder,
-      },
-    ],
-  });
-}
+    onChange({
+      ...section,
+      resources: [
+        ...section.resources,
+        {
+          ...resource,
+          order: nextOrder,
+        },
+      ],
+    });
+  }
+  function reorderResources(
+    reorderedResources: LevelResource[],
+  ) {
+    onChange({
+      ...section,
+      resources: reorderedResources,
+    });
+  }
 
   return (
     <article className="rounded-2xl border border-[#e1e5ed] bg-white p-4 shadow-[0_10px_25px_rgba(1,14,54,0.025)] sm:p-5">
@@ -82,18 +91,7 @@ export function LevelSectionCard({
           >
             Remove section
           </button>
-          <button
-            aria-controls={contentId}
-            aria-expanded={isExpanded}
-            aria-label={`${isExpanded ? "Collapse" : "Expand"} ${section.title.trim() || `section ${index + 1}`}`}
-            className="rounded-lg p-2 text-ink/60 transition hover:bg-[#f2f4f8] hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            onClick={() => setIsExpanded((expanded) => !expanded)}
-            type="button"
-          >
-            <svg aria-hidden="true" className={`h-5 w-5 transition-transform ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24">
-              <path d="m6 9 6 6 6-6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-            </svg>
-          </button>
+          <CollapseToggle contentId={contentId} isExpanded={isExpanded} label={section.title.trim() || `section ${index + 1}`} onToggle={toggle} />
         </div>
       </div>
 
@@ -125,19 +123,29 @@ export function LevelSectionCard({
       </div>
 
       <div className="mt-5 space-y-3">
-        {section.resources.map((resource, resourceIndex) => (
-          <LevelResourceEditor
-            index={resourceIndex}
-            isUploading={uploadingResourceId === resource.id}
-            key={resource.id}
-            onChange={(nextResource) => updateResource(resource.id, nextResource)}
-            onRemove={() => removeResource(resource.id)}
-            onUpload={(file) => onUpload(resource.id, file)}
-            resource={resource}
-            levelId={levelId}
-            sectionId={section.id}
-          />
-        ))}
+        <SortableList
+          items={section.resources}
+          onReorder={reorderResources}
+          layout="vertical"
+          orderDirection="asc"
+          className="mt-5 space-y-3"
+          disabled={uploadingResourceId !== null}
+          renderItem={(resource, resourceIndex, dragHandle) => (
+            <LevelResourceEditor
+              index={resourceIndex}
+              dragHandle={dragHandle}
+              isUploading={uploadingResourceId === resource.id}
+              onChange={(nextResource) =>
+                updateResource(resource.id, nextResource)
+              }
+              onRemove={() => removeResource(resource.id)}
+              onUpload={(file) => onUpload(resource.id, file)}
+              resource={resource}
+              levelId={levelId}
+              sectionId={section.id}
+            />
+          )}
+        />
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2 border-t border-[#edf0f5] pt-4">

@@ -1,9 +1,8 @@
-
 import { DocumentIcon, ImageIcon, UploadIcon } from "@/components/admin/icons";
+import { CollapseToggle, useCollapsible } from "@/components/admin/ui/collapse-toggle";
 import type { LevelResource, ResourceType } from "@/lib/admin/types";
 import { ResourceImagePreview } from "./resource-image-preview";
-import { useEffect, useState } from "react";
-
+import { useEffect, useState, type ReactNode } from "react";
 type LevelResourceEditorProps = {
   index: number;
   isUploading: boolean;
@@ -12,7 +11,8 @@ type LevelResourceEditorProps = {
   onUpload: (file: File) => void;
   resource: LevelResource;
   levelId: string;
-  sectionId: string
+  sectionId: string;
+  dragHandle?: ReactNode;
 };
 
 const resourceTypes: { value: ResourceType; label: string }[] = [
@@ -71,7 +71,9 @@ export function LevelResourceEditor({
   resource,
   levelId,
   sectionId,
+  dragHandle,
 }: LevelResourceEditorProps) {
+  const { contentId, isExpanded, toggle } = useCollapsible(true);
   const isFile =
     resource.type === "file" || resource.type === "voice" || resource.type === "image";
 
@@ -86,23 +88,46 @@ export function LevelResourceEditor({
     }, [imagePreviewUrl]);
   return (
     <div className="rounded-xl border border-[#e8ebf1] bg-[#fbfcff] p-3 sm:p-4">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <span className="flex items-center gap-2 text-xs font-bold text-ink/55">
-          <span className="flex h-5 w-5 items-center justify-center rounded-md bg-[#eaf0ff] text-[10px] text-brand">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          {dragHandle}
+
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#eaf0ff] text-[10px] font-bold text-brand">
             {index + 1}
           </span>
-          Resource {index + 1}
-        </span>
 
-        <button
-          className="text-xs font-bold text-ink/42 transition hover:text-[#c14a4a]"
-          onClick={onRemove}
-          type="button"
-        >
-          Remove
-        </button>
+          <span className="min-w-0 break-words text-xs font-bold text-ink/55">
+            {resource.title.trim() || `Resource ${index + 1}`}
+          </span>
+
+          <span className="shrink-0 text-xs font-medium text-ink/40">
+            {resourceTypes.find(
+              (type) => type.value === resource.type,
+            )?.label}
+          </span>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            className="text-xs font-bold text-ink/42 transition hover:text-[#c14a4a]"
+            onClick={onRemove}
+            type="button"
+          >
+            Remove
+          </button>
+
+          <CollapseToggle
+            contentId={contentId}
+            isExpanded={isExpanded}
+            label={
+              resource.title.trim() || `resource ${index + 1}`
+            }
+            onToggle={toggle}
+          />
+        </div>
       </div>
 
+      <div className="mt-3" hidden={!isExpanded} id={contentId}>
       <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_150px]">
         <label>
           <span className="mb-1.5 block text-xs font-semibold text-ink/57">
@@ -293,6 +318,7 @@ export function LevelResourceEditor({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
