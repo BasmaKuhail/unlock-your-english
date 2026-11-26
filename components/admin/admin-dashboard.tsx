@@ -8,7 +8,7 @@ import { LevelsView } from "@/components/admin/levels/levels-view";
 import { StudentEditor } from "@/components/admin/students/student-editor";
 import { StudentsView } from "@/components/admin/students/students-view";
 import { DashboardLayout } from "@/layouts/dashboard-layout";
-import type { AdminProfile, AdminView } from "@/lib/admin/types";
+import type { AdminProfile, AdminView, Level } from "@/lib/admin/types";
 
 export function AdminDashboard({
   adminProfile,
@@ -61,6 +61,7 @@ export function AdminDashboard({
           />
         ) : (
           <LevelsView
+            onReorder={dashboard.reorderLevels}
             deletingLevelId={dashboard.deletingLevelId}
             levels={dashboard.levels}
             onAdd={dashboard.addLevel}

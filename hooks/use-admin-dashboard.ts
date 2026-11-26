@@ -33,6 +33,12 @@ export function useAdminDashboard() {
   const deletingLevel = useRef(false);
   const alertTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const reorderLevels = useCallback(
+    (reorderedLevels: Level[]) => {
+      setLevels(reorderedLevels);
+    },
+    [],
+  );
   const notify = useCallback((message: string, variant: AlertVariant = "success", title?: string) => {
     const nextAlert: AdminAlert = {
       id: crypto.randomUUID(),
@@ -565,5 +571,6 @@ const saveLevel = useCallback(
     students,
     alert,
     toggleStudentAccess,
+    reorderLevels,
   };
 }

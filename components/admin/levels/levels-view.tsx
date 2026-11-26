@@ -1,3 +1,8 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { SortableList } from "@/components/admin/sortable/sortable-list";
+
 import { ArrowRightIcon, BookIcon, MoreIcon, PlusIcon } from "@/components/admin/icons";
 import { PageHeading } from "@/components/admin/ui/page-heading";
 import { levelCopy } from "@/lib/admin/content";
@@ -5,7 +10,27 @@ import { getLevelStudents } from "@/lib/admin/levels";
 import type { Level } from "@/lib/admin/types";
 import type { Student } from "@/types/student";
 
-export function LevelsView({ levels, students, onEdit, onAdd, onDelete, deletingLevelId }: { levels: Level[]; students: Student[]; onEdit: (level: Level) => void; onAdd: () => void; onDelete: (level: Level) => Promise<void>; deletingLevelId: string | null }) {
+type LevelsViewProps = {
+  levels: Level[];
+  students: Student[];
+  onEdit: (level: Level) => void;
+  onAdd: () => void;
+  onDelete: (level: Level) => Promise<void>;
+  onReorder: (levels: Level[]) => void;
+  deletingLevelId: string | null;
+  isReordering?: boolean;
+};
+
+export function LevelsView({
+  levels,
+  students,
+  onEdit,
+  onAdd,
+  onDelete,
+  onReorder,
+  deletingLevelId,
+  isReordering = false,
+}: LevelsViewProps) {
   return (
     <div className="space-y-6 sm:space-y-7">
       <PageHeading eyebrow={levelCopy.eyebrow} title={levelCopy.title}>
@@ -15,33 +40,95 @@ export function LevelsView({ levels, students, onEdit, onAdd, onDelete, deleting
         </button>
       </PageHeading>
       <p className="-mt-3 max-w-xl text-sm leading-6 text-ink/55 sm:-mt-4">{levelCopy.description}</p>
-      <section className="grid gap-4 sm:gap-5 md:grid-cols-2 2xl:grid-cols-3">
-        {levels.map((level) => (
-          <LevelCard key={level.id} level={level} onEdit={onEdit} onDelete={onDelete} deletingLevelId={deletingLevelId} studentCount={getLevelStudents(students, level).length} />
-        ))}
-        {levels.length === 0 && (
-          <div className="col-span-full rounded-2xl border border-dashed border-[#cfd7e7] bg-white px-6 py-14 text-center">
-            <p className="text-sm font-bold">No levels yet</p>
-            <p className="mt-1 text-sm text-ink/47">Create the first learning path to add sections and enroll students.</p>
-          </div>
-        )}
-      </section>
+      <section className="w-full">
+        {levels.length > 0 ? (
+          <SortableList
+            items={levels}
+            onReorder={onReorder}
+            layout="grid"
+            disabled={isReordering || deletingLevelId !== null}
+            className="grid gap-4 sm:gap-5 md:grid-cols-2 2xl:grid-cols-3"
+            renderItem={(level, index, dragHandle) => (
+              <LevelCard
+                level={level}
+                index={index}
+                dragHandle={dragHandle}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                deletingLevelId={deletingLevelId}
+                studentCount={
+                  getLevelStudents(students, level).length
+                }
+              />
+            )}
+          />
+        ) : (
+        <div className="rounded-2xl border border-dashed border-[#cfd7e7] bg-white px-6 py-14 text-center">
+          <p className="text-sm font-bold">
+            No levels yet
+          </p>
+          <p className="mt-1 text-sm text-ink/47">
+            Create the first learning path to add sections
+            and enroll students.
+          </p>
+        </div>
+      )}
+    </section>
     </div>
   );
 }
 
-function LevelCard({ level, onEdit, onDelete, deletingLevelId, studentCount }: { level: Level; onEdit: (level: Level) => void; onDelete: (level: Level) => Promise<void>; deletingLevelId: string | null; studentCount: number }) {
+type LevelCardProps = {
+  level: Level;
+  index: number;
+  dragHandle: ReactNode;
+  onEdit: (level: Level) => void;
+  onDelete: (level: Level) => Promise<void>;
+  deletingLevelId: string | null;
+  studentCount: number;
+};
+
+function LevelCard({
+  level,
+  index,
+  dragHandle,
+  onEdit,
+  onDelete,
+  deletingLevelId,
+  studentCount,
+}: LevelCardProps) {
   const documentCount = level.sections.reduce(
     (total, section) => total + section.resources.length,
     0,
   );
 
   return (
-    <article className="group rounded-2xl border border-[#e7e9f0] bg-white p-5 transition hover:-translate-y-0.5 hover:border-[#cedaff] hover:shadow-[0_15px_35px_rgba(1,14,54,0.06)]">
-            <div className="flex items-start justify-between gap-4">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#eaf0ff] text-brand"><BookIcon className="h-5 w-5" /></span>
-              <button aria-label={`Edit ${level.title}`} className="shrink-0 rounded-lg p-2 text-ink/38 hover:bg-[#edf2ff] hover:text-brand" onClick={() => onEdit(level)} type="button"><MoreIcon className="h-5 w-5" /></button>
-            </div>
+    <article className="group h-full w-full rounded-2xl border border-[#e7e9f0] bg-white p-5 transition hover:border-[#cedaff] hover:shadow-[0_15px_35px_rgba(1,14,54,0.06)]">            
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#eaf0ff] text-brand">
+            <BookIcon className="h-5 w-5" />
+          </span>
+
+          <span className="whitespace-nowrap text-xs font-bold text-ink/50">
+            Level {index + 1}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          {dragHandle}
+
+          <button
+            aria-label={`Edit ${level.title}`}
+            className="flex items-center gap-1 shrink-0 rounded-lg p-2 text-ink/38 hover:bg-[#edf2ff] hover:text-brand"
+            onClick={() => onEdit(level)}
+            type="button"
+          >
+            <MoreIcon className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
             <h2 className="mt-5 text-xl font-bold tracking-[-0.04em]">{level.title}</h2>
             <p className="mt-1.5 text-sm text-ink/52">{level.description}</p>
             <div className="mt-3">
