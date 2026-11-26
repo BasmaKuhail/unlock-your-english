@@ -7,6 +7,7 @@ import { getStudentInitials, getStudentTone } from "@/lib/admin/student-presenta
 import type { Level, LevelSection, StudentFilter } from "@/lib/admin/types";
 import type { Student } from "@/types/student";
 import { saveSectionResources } from "@/lib/admin/save-section-resources";
+import { saveSectionOrder } from "@/lib/admin/save-section-order";
 
 type StudentApiRecord = Omit<Student, "initials" | "tone">;
 
@@ -347,12 +348,18 @@ const saveLevel = useCallback(
 
         createdSections.push({
           ...createdSection,
+          order: section.order,
           resources,
         });
       }
+      const orderedSections = await saveSectionOrder(
+        createdLevel.id,
+        createdSections,
+      );
+
       const completeLevel: Level = {
         ...createdLevel,
-        sections: createdSections,
+        sections: orderedSections,
       };
 
       setLevels((current) => [
@@ -453,6 +460,7 @@ const saveLevel = useCallback(
 
       createdSections.push({
         ...createdSection,
+        order: section.order,
         resources,
       });
     }
@@ -540,10 +548,13 @@ const saveLevel = useCallback(
     );
 
 
-    const updatedSections = [
-      ...updatedExistingSections,
-      ...createdSections,
-    ].sort((a, b) => a.order - b.order);
+    const updatedSections = await saveSectionOrder(
+      level.id,
+      [
+        ...updatedExistingSections,
+        ...createdSections,
+      ],
+    );
 
     const updatedLevel: Level = {
       ...level,

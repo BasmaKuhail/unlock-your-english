@@ -39,6 +39,7 @@ type SortableListProps<T extends SortableEntity> = {
   className?: string;
   layout?: "grid" | "vertical";
   disabled?: boolean;
+  orderDirection?: "asc" | "desc";
 };
 
 export function SortableList<T extends SortableEntity>({
@@ -48,6 +49,7 @@ export function SortableList<T extends SortableEntity>({
   className,
   layout = "vertical",
   disabled = false,
+  orderDirection = "asc",
 }: SortableListProps<T>) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -81,9 +83,12 @@ export function SortableList<T extends SortableEntity>({
       items,
       oldIndex,
       newIndex,
-    ).map((item, index) => ({
+    ).map((item, index, reordered) => ({
       ...item,
-      order: index,
+      order:
+        orderDirection === "desc"
+          ? reordered.length - 1 - index
+          : index,
     }));
 
     onReorder(reorderedItems);

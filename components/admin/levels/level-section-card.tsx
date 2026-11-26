@@ -3,6 +3,7 @@ import { LevelResourceEditor } from "@/components/admin/levels/level-resource-ed
 import { Toggle } from "@/components/admin/ui/toggle";
 import { createTextResource, createUploadedResource } from "@/lib/admin/levels";
 import type { LevelResource, LevelSection } from "@/lib/admin/types";
+import { useId, useState, type ReactNode } from "react";
 
 type LevelSectionCardProps = {
   levelId: string;
@@ -12,6 +13,7 @@ type LevelSectionCardProps = {
   onUpload: (resourceId: string, file: File) => void;
   section: LevelSection;
   uploadingResourceId: string | null;
+  dragHandle?: ReactNode;
 };
 
 export function LevelSectionCard({
@@ -21,8 +23,12 @@ export function LevelSectionCard({
   onUpload,
   section,
   uploadingResourceId,
-  levelId
+  levelId,
+  dragHandle,
 }: LevelSectionCardProps) {
+  const [isExpanded, setIsExpanded] = useState(!section.title.trim());
+  const contentId = useId();
+
   function updateResource(resourceId: string, resource: LevelResource) {
     onChange({
       ...section,
@@ -62,25 +68,37 @@ export function LevelSectionCard({
 
   return (
     <article className="rounded-2xl border border-[#e1e5ed] bg-white p-4 shadow-[0_10px_25px_rgba(1,14,54,0.025)] sm:p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[#edf0f5] pb-4">
-        <div className="flex items-center gap-3">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#eaf0ff] text-xs font-bold text-brand">
-            {index + 1}
-          </span>
-          <div>
-            <p className="text-sm font-bold">Section {index + 1}</p>
-            <p className="mt-0.5 text-xs text-ink/47">Group related learning documents.</p>
-          </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          {dragHandle}
+          <p className="min-w-0 break-words text-sm font-bold">{section.title.trim() || `Untitled section ${index + 1}`}</p>
         </div>
-        <button
-          className="rounded-lg px-2 py-1.5 text-xs font-bold text-ink/42 transition hover:bg-[#fff3f3] hover:text-[#c14a4a]"
-          onClick={onRemove}
-          type="button"
-        >
-          Remove section
-        </button>
+
+        <div className="flex items-center gap-2">
+          <button
+            className="rounded-lg px-2 py-1.5 text-xs font-bold text-ink/42 transition hover:bg-[#fff3f3] hover:text-[#c14a4a]"
+            onClick={onRemove}
+            type="button"
+          >
+            Remove section
+          </button>
+          <button
+            aria-controls={contentId}
+            aria-expanded={isExpanded}
+            aria-label={`${isExpanded ? "Collapse" : "Expand"} ${section.title.trim() || `section ${index + 1}`}`}
+            className="rounded-lg p-2 text-ink/60 transition hover:bg-[#f2f4f8] hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+            type="button"
+          >
+            <svg aria-hidden="true" className={`h-5 w-5 transition-transform ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24">
+              <path d="m6 9 6 6 6-6" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+            </svg>
+          </button>
+        </div>
       </div>
 
+      <div hidden={!isExpanded} id={contentId}>
+      <div className="mt-4 border-t border-[#edf0f5]" />
       <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <label>
           <span className="mb-1.5 block text-xs font-semibold text-ink/57">Section title</span>
@@ -135,6 +153,7 @@ export function LevelSectionCard({
         <button className="inline-flex items-center gap-1.5 rounded-full border border-[#dfe5f2] px-3 py-2 text-xs font-bold text-ink/60 hover:bg-[#f6f8fc]" onClick={() => addResource("image")} type="button">
           <PlusIcon className="h-3.5 w-3.5" /> Image
         </button>
+      </div>
       </div>
     </article>
   );
