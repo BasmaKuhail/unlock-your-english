@@ -33,12 +33,10 @@ export function useAdminDashboard() {
   const deletingLevel = useRef(false);
   const alertTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const reorderLevels = useCallback(
-    (reorderedLevels: Level[]) => {
-      setLevels(reorderedLevels);
-    },
-    [],
-  );
+  const [isReorderingLevels, setIsReorderingLevels] =
+    useState(false);
+
+
   const notify = useCallback((message: string, variant: AlertVariant = "success", title?: string) => {
     const nextAlert: AdminAlert = {
       id: crypto.randomUUID(),
@@ -57,7 +55,56 @@ export function useAdminDashboard() {
 
     alertTimeout.current = setTimeout(() => setAlert(null), variant === "success" ? 3200 : 4800);
   }, []);
+    const reorderLevels = useCallback(
+    async (reorderedLevels: Level[]) => {
+      if (isReorderingLevels) return;
 
+      const previousLevels = levels;
+
+      setIsReorderingLevels(true);
+      setLevels(reorderedLevels);
+
+      try {
+        const response = await fetch(
+          "/api/admin/levels/reorder",
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              levelIds: reorderedLevels.map(
+                (level) => level.id,
+              ),
+            }),
+          },
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.error ?? "Unable to reorder levels.",
+          );
+        }
+
+        notify("Level order updated.");
+      } catch (error) {
+        setLevels(previousLevels);
+
+        notify(
+          error instanceof Error
+            ? error.message
+            : "Unable to reorder levels.",
+          "error",
+          "Level order not updated",
+        );
+      } finally {
+        setIsReorderingLevels(false);
+      }
+    },
+    [levels, isReorderingLevels, notify],
+  );
   useEffect(() => {
     async function loadStudents() {
       try {
@@ -572,5 +619,6 @@ const saveLevel = useCallback(
     alert,
     toggleStudentAccess,
     reorderLevels,
+    isReorderingLevels,
   };
 }
