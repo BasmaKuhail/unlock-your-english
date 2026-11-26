@@ -62,6 +62,7 @@ export function AdminDashboard({
         ) : (
           <LevelsView
             onReorder={dashboard.reorderLevels}
+            isReordering={dashboard.isReorderingLevels}
             deletingLevelId={dashboard.deletingLevelId}
             levels={dashboard.levels}
             onAdd={dashboard.addLevel}

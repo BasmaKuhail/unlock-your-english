@@ -1,3 +1,4 @@
+import { saveResourceOrder } from "@/lib/admin/save-resource-order";
 
 import type {
   LevelResource,
@@ -76,8 +77,8 @@ export async function saveSectionResources(
     }
 
     const changed =
-      JSON.stringify(resource) !==
-      JSON.stringify(original);
+      JSON.stringify({ ...resource, order: 0 }) !==
+      JSON.stringify({ ...original, order: 0 });
 
     if (!changed) {
       savedResources.push(resource);
@@ -111,5 +112,9 @@ export async function saveSectionResources(
     }
   }
 
-  return savedResources;
+  return await saveResourceOrder(
+    levelId,
+    section.id,
+    savedResources,
+  );
 }

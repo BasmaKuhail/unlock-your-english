@@ -9,6 +9,7 @@ import { LevelStudents } from "@/components/admin/levels/level-students";
 import { createSection, NEW_LEVEL_ID } from "@/lib/admin/levels";
 import type { Level, LevelResource, LevelSection } from "@/lib/admin/types";
 import type { Student } from "@/types/student";
+import { SortableList } from "@/components/admin/sortable/sortable-list";
 
 type LevelEditorProps = {
   level: Level;
@@ -186,6 +187,12 @@ export function LevelEditor({
     };
   });
 }
+function reorderSections(reorderedSections: LevelSection[]) {
+  setDraft((current) => ({
+    ...current,
+    sections: reorderedSections.toReversed(),
+  }));
+}
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-start sm:justify-between">
@@ -208,28 +215,42 @@ export function LevelEditor({
           <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand">Content sections</p>
-              <h2 className="mt-1 text-lg font-bold tracking-[-0.035em]">Build the learning sequence</h2>
               <p className="mt-1 text-sm text-ink/50">Each section can be opened or closed and can hold text, files, and voice documents.</p>
+              <div className="mt-3 flex items-start gap-3 rounded-xl border border-[#f2d18b] bg-[#fff8e8] px-4 py-3 text-sm leading-5 text-[#704c12]">
+                <svg aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-[#a86d0b]" fill="none" viewBox="0 0 24 24">
+                  <path d="M12 9v4m0 4h.01M10.3 3.9 2.8 17a2 2 0 0 0 1.7 3h15a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                </svg>
+                <p><strong className="font-bold">Important:</strong> Sections are ordered from bottom to top. Drag and drop them to change their order.</p>
+              </div>
             </div>
             <button className="inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-4 py-2.5 text-sm font-bold text-white shadow-[0_8px_18px_rgba(58,112,255,0.18)] transition hover:bg-brand-dark" onClick={addSection} type="button">
               <PlusIcon className="h-4 w-4" /> Add section
             </button>
           </div>
-
-          <div className="space-y-4">
-            {draft.sections.toReversed().map((section, index) => (
+          <SortableList
+            items={draft.sections.toReversed()}
+            onReorder={reorderSections}
+            orderDirection="desc"
+            layout="vertical"
+            className="space-y-4"
+            disabled={isSaving || uploadingResourceId !== null}
+            renderItem={(section, index, dragHandle) => (
               <LevelSectionCard
                 index={draft.sections.length - 1 - index}
-                key={section.id}
-                onChange={(nextSection) => updateSection(section.id, nextSection)}
+                dragHandle={dragHandle}
+                onChange={(nextSection) =>
+                  updateSection(section.id, nextSection)
+                }
                 onRemove={() => removeSection(section.id)}
-                onUpload={(resourceId, file) => uploadResource(section.id, resourceId, file)}
+                onUpload={(resourceId, file) =>
+                  uploadResource(section.id, resourceId, file)
+                }
                 section={section}
                 uploadingResourceId={uploadingResourceId}
                 levelId={draft.id}
               />
-            ))}
-          </div>
+            )}
+          />
 
           {draft.sections.length === 0 && (
             <button className="flex w-full flex-col items-center rounded-2xl border border-dashed border-[#cfd7e7] bg-[#fbfcff] px-5 py-10 text-center transition hover:border-brand/50 hover:bg-[#f8faff]" onClick={addSection} type="button">
