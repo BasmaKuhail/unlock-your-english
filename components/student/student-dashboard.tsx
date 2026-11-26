@@ -8,10 +8,11 @@ import { useStudentDashboard } from "@/hooks/use-student-dashboard";
 
 import { SectionCard } from "./section-card";
 import { SectionReader } from "./section-reader";
+import { ProgressFeedback } from "./progress-feedback";
 
 export function StudentDashboard() {
   const dashboard = useStudentDashboard();
-  const { data, loading, error, level, section, saving, notice } = dashboard;
+  const { data, loading, error, level, section, saving, feedback } = dashboard;
   const [levelOpen, setLevelOpen] = useState(false);
   const handledContinue = useRef(false);
   const currentLevel = data?.levels.find((item) => item.isCurrent);
@@ -58,9 +59,8 @@ export function StudentDashboard() {
       </div>
     </header>
 
-    <main id="learning-content" className="mx-auto max-w-[1240px] px-5 pb-16 pt-8 sm:px-8 sm:pt-12">
+    <main id="learning-content" tabIndex={-1} className="mx-auto max-w-[1240px] px-5 pb-16 pt-8 outline-none sm:px-8 sm:pt-12">
       {error && <div role="alert" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-800"><span>{error}</span><button type="button" onClick={dashboard.reload} className="font-semibold underline">Try again</button></div>}
-      {notice && <p role="status" className="mb-6 rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-800">{notice}</p>}
       {loading && !data ? <div role="status" aria-busy="true" className="rounded-[2rem] bg-white p-10 text-sm text-ink/60">Getting your learning space ready...</div> : data && (levelOpen && level ? <>
         {!section && <button type="button" onClick={goHome} className="mb-6 inline-flex items-center gap-2 text-sm font-bold text-brand hover:text-brand-dark"><span aria-hidden="true">←</span> My dashboard</button>}
         {section ? <SectionReader key={`${level.id}/${section.id}`} section={section} levelId={level.id} levelTitle={level.title} sectionNumber={level.sections.findIndex((item) => item.id === section.id) + 1} saving={saving} onComplete={dashboard.complete} onBack={() => dashboard.selectSection(null)} canComplete={level.isCurrent} /> : <>
@@ -101,5 +101,6 @@ export function StudentDashboard() {
         {data.levels.some((item) => !item.isCurrent) && <section className="mt-10"><h2 className="mb-4 text-lg font-bold">Previous levels</h2><div className="flex flex-wrap gap-3">{data.levels.filter((item) => !item.isCurrent).map((past) => <button key={past.id} type="button" onClick={() => openLevel(past.id)} className="rounded-2xl border border-[#e4edfc] bg-white px-5 py-4 text-sm font-bold text-ink transition hover:border-brand/40 hover:text-brand">{past.title} <span aria-hidden="true" className="ml-4">→</span></button>)}</div></section>}
       </>)}
     </main>
+    {feedback && <ProgressFeedback feedback={feedback} onDismiss={dashboard.dismissFeedback} onRetry={() => { dashboard.dismissFeedback(); void dashboard.complete(); }} onRefresh={() => { dashboard.dismissFeedback(); void dashboard.reload(); }} />}
   </div>;
 }
