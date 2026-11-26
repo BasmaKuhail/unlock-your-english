@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Logo } from "@/components/ui/logo";
 import { loginContent } from "@/lib/auth/login-content";
 import rabbitReading from "@/public/images/bunny/login.png";
+import peeking from "@/public/peeking.png";
 
 type AuthShellProps = {
   children: ReactNode;
@@ -18,8 +19,16 @@ export function LoginShell({ children }: AuthShellProps) {
         <Logo label="UYE" />
       </header>
 
-      <main className="mx-auto my-auto grid w-full max-w-5xl overflow-hidden rounded-[1.75rem] border border-line bg-white shadow-[0_20px_55px_rgba(1,14,54,0.09)] lg:min-h-[32rem] lg:grid-cols-[0.82fr_1.18fr]">
-        <aside className="relative hidden min-h-[32rem] overflow-hidden bg-[#eaf1ff] px-8 py-8 lg:flex lg:flex-col">
+      <div className="relative mx-auto my-auto w-full max-w-5xl pt-36 md:pt-0">
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-36 overflow-hidden md:hidden">
+          <Image
+            alt=""
+            className="absolute bottom-0 left-1/2 w-[26rem] max-w-none -translate-x-1/2 translate-y-3"
+            src={peeking}
+          />
+        </div>
+        <main className="grid w-full overflow-hidden rounded-[1.75rem] border border-line bg-white shadow-[0_20px_55px_rgba(1,14,54,0.09)] md:min-h-[32rem] md:grid-cols-[0.82fr_1.18fr]">
+        <aside className="relative hidden min-h-[32rem] overflow-hidden bg-[#eaf1ff] px-8 py-8 md:flex md:flex-col">
           <div aria-hidden="true" className="absolute -left-20 -top-16 h-48 w-48 rounded-full bg-brand/15 blur-3xl" />
           <div aria-hidden="true" className="absolute -bottom-24 -right-12 h-56 w-56 rounded-full bg-white/75 blur-2xl" />
 
@@ -33,7 +42,7 @@ export function LoginShell({ children }: AuthShellProps) {
             <div className="absolute inset-x-0 bottom-0 h-full rounded-[1.5rem] " />
             <Image
               alt="The Uye rabbit reading a book"
-              className="relative z-10 w-[23rem] max-w-none object-contain"
+              className="relative z-10 w-full max-w-none object-contain lg:w-[23rem]"
               priority
               src={rabbitReading}
             />
@@ -43,7 +52,8 @@ export function LoginShell({ children }: AuthShellProps) {
         <section className="flex items-center px-5 py-9 sm:px-10 sm:py-10 lg:px-12">
           <div className="mx-auto w-full max-w-sm">{children}</div>
         </section>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

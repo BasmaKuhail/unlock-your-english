@@ -1,9 +1,9 @@
 "use client";
 
 import { useLoginForm } from "@/hooks/use-login-form";
+import { homeContent } from "@/content/home";
+import { WhatsAppIcon } from "@/components/ui/icons";
 import { loginContent } from "@/lib/auth/login-content";
-import Image from "next/image";
-import peeking from "@/public/peeking.png"
 type FieldProps = {
   id: string;
   label: string;
@@ -45,8 +45,6 @@ export function LoginForm() {
         <p className="mt-2 text-sm leading-6 text-ink/60">{loginContent.description}</p>
       </div>
 
-    <div className="flex flex-col gap-0">
-      <Image src={peeking} alt="bunny" width={100} height={100} className="md:hiddin" />
       <form className="mt-6 space-y-4" onSubmit={submit}>
         <Field 
           autoComplete="username" 
@@ -82,10 +80,23 @@ export function LoginForm() {
           {loginContent.submitLabel}
         </button>
       </form>
-</div>
       <p aria-live="polite" className="mt-3 min-h-5 text-center text-sm text-ink/60">
         {notice}
       </p>
+      <div className="mt-4 rounded-2xl border border-[#25D366]/30 bg-[#25D366]/10 p-4 text-sm leading-6 text-ink/80">
+        <p>
+          Don&apos;t have an account? Join our WhatsApp community and ask an admin to create one for you.
+        </p>
+        <a
+          className="mt-2 inline-flex items-center gap-2 font-semibold text-[#087a3e] underline underline-offset-4 transition hover:text-[#075e36] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#087a3e]"
+          href={homeContent.closing.action.href}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <WhatsAppIcon className="h-5 w-5 shrink-0" />
+          Join the WhatsApp community
+        </a>
+      </div>
     </>
   );
 }
