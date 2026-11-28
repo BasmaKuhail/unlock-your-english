@@ -7,6 +7,7 @@ import { ArrowRightIcon } from "@/components/ui/icons";
 import { useStudentDashboard } from "@/hooks/use-student-dashboard";
 
 import { LevelMap } from "./level-map";
+import { PreviousLevels } from "./previous-levels";
 import { ProgressBunny } from "./progress-bunny";
 import { SectionReader } from "./section-reader";
 
@@ -75,11 +76,24 @@ export function StudentDashboard() {
           <section className="relative flex min-h-[340px] flex-col overflow-hidden rounded-[2rem] bg-[#173d91] p-7 text-white sm:min-h-[400px] sm:p-10">
             <div aria-hidden="true" className="absolute -right-14 -top-24 h-72 w-72 rounded-full border-[45px] border-white/5" />
             <p className="relative text-xs font-bold uppercase tracking-[0.2em] text-blue-200">Current level</p>
-            {currentLevel ? <><h2 className="relative mt-4 max-w-[75%] text-3xl font-bold tracking-tight sm:text-4xl">{currentLevel.title}</h2><div className="relative z-10 mt-auto max-w-[72%] pt-10"><div className="mb-3 flex justify-between gap-3 text-sm font-semibold"><span>Your progress</span><span>{currentLevel.sections.length ? Math.round(currentCompleted / currentLevel.sections.length * 100) : 0}%</span></div><div role="progressbar" aria-label={`${currentLevel.title} progress`} aria-valuenow={currentLevel.sections.length ? Math.round(currentCompleted / currentLevel.sections.length * 100) : 0} aria-valuemin={0} aria-valuemax={100} className="h-2.5 overflow-hidden rounded-full bg-white/20"><div className="h-full rounded-full bg-[#80d8ff]" style={{ width: `${currentLevel.sections.length ? currentCompleted / currentLevel.sections.length * 100 : 0}%` }} /></div><p className="mt-3 text-xs text-blue-100">{currentCompleted} of {currentLevel.sections.length} sections completed</p><button type="button" onClick={() => openLevel(currentLevel.id)} className="mt-6 inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#173d91] transition hover:bg-blue-50">Open level <ArrowRightIcon className="h-4 w-4" /></button></div></> : <p className="relative mt-5 text-sm text-blue-100">Your teacher will assign your level soon.</p>}
+            {currentLevel ? <>
+              <h2 className="relative mt-4 max-w-[75%] text-3xl font-bold tracking-tight sm:text-4xl">{currentLevel.title}</h2>
+              <div className="relative z-10 mt-auto max-w-[72%] pt-10">
+                {currentLevel.sections.length ? <>
+                  <div className="mb-3 flex justify-between gap-3 text-sm font-semibold"><span>Your progress</span><span>{Math.round(currentCompleted / currentLevel.sections.length * 100)}%</span></div>
+                  <div role="progressbar" aria-label={`${currentLevel.title} progress`} aria-valuenow={Math.round(currentCompleted / currentLevel.sections.length * 100)} aria-valuemin={0} aria-valuemax={100} className="h-2.5 overflow-hidden rounded-full bg-white/20"><div className="h-full rounded-full bg-[#80d8ff]" style={{ width: `${currentCompleted / currentLevel.sections.length * 100}%` }} /></div>
+                  <p className="mt-3 text-xs text-blue-100">{currentCompleted} of {currentLevel.sections.length} sections completed</p>
+                  <button type="button" onClick={() => openLevel(currentLevel.id)} className="mt-6 inline-flex items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-bold text-[#173d91] transition hover:bg-blue-50">Open level <ArrowRightIcon className="h-4 w-4" /></button>
+                </> : <>
+                  <p className="text-base font-bold">Your lessons aren&apos;t here yet</p>
+                  <p className="mt-2 text-sm leading-6 text-blue-100">There are no lessons in this level yet. Check back later or ask your teacher for an update.</p>
+                </>}
+              </div>
+            </> : <p className="relative mt-5 text-sm text-blue-100">Your teacher will assign your level soon.</p>}
             {currentLevel && <ProgressBunny completed={currentCompleted} total={currentLevel.sections.length} className="pointer-events-none absolute -bottom-5 -right-8 h-[58%] w-[40%] object-contain object-bottom sm:-right-5 sm:h-[65%]" />}
           </section>
         </div>
-        {data.levels.some((item) => !item.isCurrent) && <section className="mt-10"><h2 className="mb-4 text-lg font-bold">Previous levels</h2><div className="flex flex-wrap gap-3">{data.levels.filter((item) => !item.isCurrent).map((past) => <button key={past.id} type="button" onClick={() => openLevel(past.id)} className="rounded-2xl border border-[#e4edfc] bg-white px-5 py-4 text-sm font-bold text-ink transition hover:border-brand/40 hover:text-brand">{past.title} <span aria-hidden="true" className="ml-4">→</span></button>)}</div></section>}
+        <PreviousLevels levels={data.levels} onOpenLevel={openLevel} />
       </>)}
     </main>
   </div>;
